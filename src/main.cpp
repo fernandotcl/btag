@@ -10,13 +10,16 @@ static void print_usage(std::ostream &out)
 {
     out << "\
 Usage: \n\
-    qtagger <path> [path2] [path3] ...\n\
+    qtagger [--dir-rename-format] [--file-rename-format format] \\\n\
+            <path> [path2] [path3] ...\n\
     qtagger --help" << std::endl;
 }
 
 int main(int argc, char **argv)
 {
     struct option long_options[] = {
+        {"dir-rename-format", required_argument, NULL, 'd'},
+        {"file-rename-format", required_argument, NULL, 'f'},
         {"help", no_argument, NULL, 'h'},
         {NULL, 0, NULL, 0}
     };
@@ -26,8 +29,14 @@ int main(int argc, char **argv)
 
     // Parse the command line options
     int opt;
-    while ((opt = getopt_long(argc, argv, "c:h", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "d:f:h", long_options, NULL)) != -1) {
         switch (opt) {
+            case 'd':
+                itag.set_dir_rename_format(optarg);
+                break;
+            case 'f':
+                itag.set_file_rename_format(optarg);
+                break;
             case 'h':
                 print_usage(std::cout);
                 return EXIT_SUCCESS;

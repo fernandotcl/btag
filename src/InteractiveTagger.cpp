@@ -1,5 +1,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
@@ -76,12 +77,14 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
 
     // Perform the pending renames
     if (!m_pending_renames.empty() && m_terminal->ask_yes_no_question("=== OK to rename the files?")) {
-        std::list<std::pair<fs::path, std::string> >::const_iterator it;
+        std::list<std::pair<fs::path, fs::path> >::const_iterator it;
         for (it = m_pending_renames.begin(); it != m_pending_renames.end(); ++it) {
             const fs::path &from((*it).first);
-            fs::path to((*it).second);
-            if (from != to)
-                fs::rename(from, to);
+            const fs::path &to((*it).second);
+            m_terminal->display_info_message(from.string());
+            m_terminal->display_info_message("-> " + to.string());
+            try { fs::rename(from, to); }
+            catch (std::exception &e) { m_terminal->display_warning_message(e.what()); }
         }
     }
 
@@ -101,6 +104,47 @@ bool InteractiveTagger::is_supported_extension(const fs::path &path)
     }
 
     return false;
+}
+
+std::string InteractiveTagger::replace_tokens(const std::string &str,
+        const std::map<std::string, std::string> &replacements)
+{
+    std::string res;
+    res.reserve(str.size() * 3);
+
+    bool parsing_token = false;
+    std::string current_token;
+    BOOST_FOREACH(char c, str) {
+        if (c == '%') {
+            if (parsing_token) {
+                std::map<std::string, std::string>::const_iterator it = replacements.find(current_token);
+                res += it == replacements.end() ? current_token : it->second;
+                current_token.erase();
+            }
+            parsing_token = true;
+        }
+        else if (parsing_token) {
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+                current_token += c;
+            }
+            else {
+                std::map<std::string, std::string>::const_iterator it = replacements.find(current_token);
+                res += it == replacements.end() ? current_token : it->second;
+                res += c;
+                parsing_token = false;
+                current_token.erase();
+            }
+        }
+        else {
+            res += c;
+        }
+    }
+    if (parsing_token) {
+        std::map<std::string, std::string>::const_iterator it = replacements.find(current_token);
+        res += it == replacements.end() ? current_token : it->second;
+    }
+
+    return res;
 }
 
 void InteractiveTagger::tag_file(const boost::filesystem::path &path,
@@ -148,8 +192,9 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     if (track == -1)
         track = f.tag()->track();
     TrackValidator track_validator;
-    f.tag()->setTrack(m_terminal->ask_number_question("Track:",
-                track > 0 ? track : boost::optional<int>(), &track_validator));
+    int new_track = m_terminal->ask_number_question("Track:",
+            track > 0 ? track : boost::optional<int>(), &track_validator);
+    f.tag()->setTrack(new_track);
 
     // Ask for the song title
     boost::optional<std::string> default_title;
@@ -166,7 +211,20 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     m_unsaved_files.push_back(f);
 
     // Add it to the list of pending renames based on the supplied format
-    // TODO
+    if (m_file_rename_format) {
+        std::map<std::string, std::string> tokens;
+        tokens["artist"] = new_artist;
+        tokens["album"] = new_album;
+        tokens["year"] = boost::lexical_cast<std::string>(new_year);
+        std::string track_str(boost::lexical_cast<std::string>(new_track));
+        if (track_str.size() == 1) track_str = "0" + track_str;
+        tokens["track"] = track_str;
+        tokens["title"] = new_title;
+        fs::path new_path = path.parent_path();
+        new_path /= replace_tokens(*m_file_rename_format, tokens) + boost::to_lower_copy(path.extension());
+        if (new_path != path)
+            m_pending_renames.push_back(std::pair<fs::path, fs::path>(path, new_path));
+    }
 }
 
 void InteractiveTagger::tag_directory(const fs::path &path)
@@ -210,7 +268,6 @@ void InteractiveTagger::tag_directory(const fs::path &path)
     int year = -1;
     if (!file_list.empty()) {
         int track = 1;
-        std::string artist, album;
         BOOST_FOREACH(const fs::path &p, file_list)
             tag_file(p, &artist, &album, &year, track++);
     }
@@ -221,6 +278,15 @@ void InteractiveTagger::tag_directory(const fs::path &path)
             tag_directory(p);
     }
 
-    // Rename this directory based on the supplied format
-    // TODO
+    // Add it to the list of pending renames based on the supplied format
+    if (!artist.empty() && m_dir_rename_format) {
+        std::map<std::string, std::string> tokens;
+        tokens["artist"] = artist;
+        tokens["album"] = album;
+        tokens["year"] = boost::lexical_cast<std::string>(year);
+        fs::path new_path = path.parent_path();
+        new_path /= replace_tokens(*m_dir_rename_format, tokens);
+        if (new_path != path)
+            m_pending_renames.push_back(std::pair<fs::path, fs::path>(path, new_path));
+    }
 }
