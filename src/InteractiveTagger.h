@@ -9,6 +9,7 @@
 #include <string>
 #include <utility>
 
+#include "BasicStringFilter.h"
 #include "InteractiveTerminal.h"
 
 class InteractiveTagger
@@ -17,6 +18,7 @@ class InteractiveTagger
         void set_terminal(InteractiveTerminal *terminal) { m_terminal = terminal; }
         void set_file_rename_format(const std::string &format) { m_file_rename_format = format; }
         void set_dir_rename_format(const std::string &format) { m_dir_rename_format = format; }
+        void set_input_filter(BasicStringFilter *filter) { m_input_filter = filter; }
 
         void tag(int num_paths, const char **paths);
 
@@ -29,6 +31,8 @@ class InteractiveTagger
                 std::string *album = NULL, int *year = NULL, int track = -1);
         void tag_directory(const boost::filesystem::path &path);
 
+        BasicStringFilter *m_input_filter;
+        BasicStringFilter m_output_filter;
         InteractiveTerminal *m_terminal;
         boost::optional<std::string> m_file_rename_format, m_dir_rename_format;
 

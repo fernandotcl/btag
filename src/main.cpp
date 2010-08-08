@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+#include "BasicStringFilter.h"
 #include "InteractiveTagger.h"
 #include "StandardConsole.h"
 
@@ -51,6 +52,10 @@ int main(int argc, char **argv)
         print_usage(std::cerr);
         return EXIT_FAILURE;
     }
+
+    // Add the input filter
+    BasicStringFilter input_filter;
+    itag.set_input_filter(&input_filter);
 
     // Create the interactive terminal
     StandardConsole console;

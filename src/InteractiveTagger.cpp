@@ -162,8 +162,9 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     if (artist && !artist->empty())
         default_artist = *artist;
     else if (!f.tag()->artist().isNull())
-        default_artist = f.tag()->artist().to8Bit();
+        default_artist = TagLib::String(m_input_filter->filter(f.tag()->artist().toWString())).to8Bit();
     std::string new_artist = m_terminal->ask_string_question("Artist:", default_artist);
+    new_artist = TagLib::String(m_output_filter.filter(TagLib::String(new_artist).toWString())).to8Bit();
     f.tag()->setArtist(new_artist);
     if (artist) *artist = new_artist;
 
@@ -172,8 +173,9 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     if (album && !album->empty())
         default_album = *album;
     else if (!f.tag()->album().isNull())
-        default_album = f.tag()->album().to8Bit();
+        default_album = TagLib::String(m_input_filter->filter(f.tag()->album().toWString())).to8Bit();
     std::string new_album = m_terminal->ask_string_question("Album:", default_album);
+    new_album = TagLib::String(m_output_filter.filter(TagLib::String(new_album).toWString())).to8Bit();
     f.tag()->setAlbum(new_album);
     if (album) *album = new_album;
 

@@ -14,11 +14,13 @@ find_package(PkgConfig)
 pkg_check_modules(TAGLIB REQUIRED taglib)
 
 set(QTAGGER_SOURCES
+    src/BasicStringFilter.cpp
     src/InteractiveTagger.cpp
     src/main.cpp
     src/StandardConsole.cpp)
 
 set(QTAGGER_HEADERS
+    src/BasicStringFilter.h
     src/InteractiveTagger.h
     src/StandardConsole.h)
 
