@@ -28,3 +28,5 @@ include_directories(${Boost_INCLUDE_DIRS} ${TAGLIB_INCLUDE_DIRS})
 
 add_executable(qtagger ${QTAGGER_SOURCES} ${QTAGGER_HEADERS})
 target_link_libraries(qtagger ${Boost_LIBRARIES} ${TAGLIB_LIBRARIES})
+
+install(TARGETS qtagger DESTINATION bin)
