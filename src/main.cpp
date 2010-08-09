@@ -1,3 +1,12 @@
+/*
+ * This file is part of qtagger.
+ *
+ * © 2010 Fernando Tarlá Cardoso Lemos
+ *
+ * Refer to the LICENSE file for licensing information.
+ *
+ */
+
 #include <cstdlib>
 #include <getopt.h>
 #include <iostream>

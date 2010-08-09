@@ -1,3 +1,12 @@
+/*
+ * This file is part of qtagger.
+ *
+ * © 2010 Fernando Tarlá Cardoso Lemos
+ *
+ * Refer to the LICENSE file for licensing information.
+ *
+ */
+
 #ifndef STANDARD_CONSOLE_H
 #define STANDARD_CONSOLE_H
 
