@@ -15,17 +15,19 @@
 class StandardConsole : public InteractiveTerminal
 {
     public:
-        bool ask_yes_no_question(const std::string &question,
+        bool ask_yes_no_question(const std::wstring &question,
                 const boost::optional<bool> &default_answer);
-        std::string ask_string_question(const std::string &question,
-                const boost::optional<std::string> &default_answer,
-                const Validator<std::string> *validator = NULL);
-        int ask_number_question(const std::string &question,
+        std::wstring ask_string_question(const std::wstring &question,
+                const boost::optional<std::wstring> &default_answer,
+                const Validator<std::wstring> *validator = NULL);
+        int ask_number_question(const std::wstring &question,
                 const boost::optional<int> &default_answer,
                 const Validator<int> *validator = NULL);
 
         void display_info_message(const std::string &message);
+        void display_info_message(const std::wstring &message);
         void display_warning_message(const std::string &message);
+        void display_warning_message(const std::wstring &message);
 };
 
 #endif

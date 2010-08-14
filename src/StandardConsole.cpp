@@ -12,18 +12,18 @@
 
 #include "StandardConsole.h"
 
-bool StandardConsole::ask_yes_no_question(const std::string &question,
+bool StandardConsole::ask_yes_no_question(const std::wstring &question,
         const boost::optional<bool> &default_answer)
 {
     for (;;) {
-        std::cout << question;
+        std::wcout << question;
         if (default_answer)
-            std::cout << (*default_answer ? " [Y/n] " : " [y/N] ");
+            std::wcout << (*default_answer ? L" [Y/n] " : L" [y/N] ");
         else
-            std::cout << " [y/n] ";
+            std::wcout << L" [y/n] ";
 
-        std::string a;
-        std::getline(std::cin, a);
+        std::wstring a;
+        std::getline(std::wcin, a);
         if (default_answer && a.empty()) {
             return *default_answer;
         }
@@ -43,29 +43,29 @@ bool StandardConsole::ask_yes_no_question(const std::string &question,
             return true;
         }
 
-        std::cout << "Please answer \"y\" or \"n\"" << std::endl;
+        std::wcout << L"Please answer \"y\" or \"n\"" << std::endl;
     }
 }
 
-std::string StandardConsole::ask_string_question(const std::string &question,
-        const boost::optional<std::string> &default_answer,
-        const Validator<std::string> *validator)
+std::wstring StandardConsole::ask_string_question(const std::wstring &question,
+        const boost::optional<std::wstring> &default_answer,
+        const Validator<std::wstring> *validator)
 {
     for (;;) {
-        std::cout << question << (default_answer ? " [" + *default_answer + "] " : " ");
+        std::wcout << question << (default_answer ? L" [" + *default_answer + L"] " : L" ");
 
-        std::string answer;
-        std::getline(std::cin, answer);
+        std::wstring answer;
+        std::getline(std::wcin, answer);
         if (answer.empty()) {
             if (default_answer)
                 return *default_answer;
         }
         else {
             if (validator) {
-                boost::optional<std::string> error_message;
+                boost::optional<std::wstring> error_message;
                 if (validator->validate(answer, error_message))
                     return answer;
-                std::cout << (error_message ? *error_message : "Unknown validation error") << std::endl;
+                std::wcout << (error_message ? *error_message : L"Unknown validation error") << std::endl;
                 continue;
             }
             else {
@@ -73,23 +73,23 @@ std::string StandardConsole::ask_string_question(const std::string &question,
             }
         }
 
-        std::cout << "Please answer the question" << std::endl;
+        std::wcout << L"Please answer the question" << std::endl;
     }
 }
 
-int StandardConsole::ask_number_question(const std::string &question,
+int StandardConsole::ask_number_question(const std::wstring &question,
         const boost::optional<int> &default_answer,
         const Validator<int> *validator)
 {
     for (;;) {
-        std::cout << question;
+        std::wcout << question;
         if (default_answer)
-            std::cout << " [" << *default_answer << "] ";
+            std::wcout << L" [" << *default_answer << L"] ";
         else
-            std::cout << " ";
+            std::wcout << L" ";
 
-        std::string answer;
-        std::getline(std::cin, answer);
+        std::wstring answer;
+        std::getline(std::wcin, answer);
         if (answer.empty()) {
             if (default_answer)
                 return *default_answer;
@@ -100,14 +100,14 @@ int StandardConsole::ask_number_question(const std::string &question,
                 res = boost::lexical_cast<int>(answer);
             }
             catch (boost::bad_lexical_cast &) {
-                std::cout << "Please answer the question with a valid number" << std::endl;
+                std::wcout << L"Please answer the question with a valid number" << std::endl;
                 continue;
             }
             if (validator) {
-                boost::optional<std::string> error_message;
+                boost::optional<std::wstring> error_message;
                 if (validator->validate(res, error_message))
                     return res;
-                std::cout << (error_message ? *error_message : "Unknown validation error") << std::endl;
+                std::wcout << (error_message ? *error_message : L"Unknown validation error") << std::endl;
                 continue;
             }
             else {
@@ -115,7 +115,7 @@ int StandardConsole::ask_number_question(const std::string &question,
             }
         }
 
-        std::cout << "Please answer the question" << std::endl;
+        std::wcout << L"Please answer the question" << std::endl;
     }
 }
 
@@ -124,7 +124,17 @@ void StandardConsole::display_info_message(const std::string &message)
     std::cout << message << std::endl;
 }
 
+void StandardConsole::display_info_message(const std::wstring &message)
+{
+    std::wcout << message << std::endl;
+}
+
 void StandardConsole::display_warning_message(const std::string &message)
 {
-    std::cerr << "WARNING: " << message << std::endl;
+    std::cerr << L"WARNING: " << message << std::endl;
+}
+
+void StandardConsole::display_warning_message(const std::wstring &message)
+{
+    std::wcerr << L"WARNING: " << message << std::endl;
 }

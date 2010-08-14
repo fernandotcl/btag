@@ -19,6 +19,7 @@
 
 #include "InteractiveTagger.h"
 #include "validators.h"
+#include "wide_string_cast.h"
 
 namespace fs = boost::filesystem;
 
@@ -46,7 +47,7 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
     BOOST_FOREACH(const fs::path &path, path_list) {
         // Check if the path exists
         if (!fs::exists(path)) {
-            m_terminal->display_warning_message("Path \""+ path.string() + "\" not found, skipping...");
+            m_terminal->display_warning_message("Path \"" + path.string() + "\" not found, skipping...");
             continue;
         }
 
@@ -76,7 +77,7 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
     }
 
     // Save the unsaved files
-    if (!m_unsaved_files.empty() && m_terminal->ask_yes_no_question("=== OK to save the changes to the files?")) {
+    if (!m_unsaved_files.empty() && m_terminal->ask_yes_no_question(L"=== OK to save the changes to the files?")) {
         BOOST_FOREACH(TagLib::FileRef &f, m_unsaved_files) {
             m_terminal->display_info_message("Saving \"" + std::string(f.file()->name()) + "\"");
             if (!f.save())
@@ -85,7 +86,7 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
     }
 
     // Perform the pending renames
-    if (!m_pending_renames.empty() && m_terminal->ask_yes_no_question("=== OK to rename the files?")) {
+    if (!m_pending_renames.empty() && m_terminal->ask_yes_no_question(L"=== OK to rename the files?")) {
         std::list<std::pair<fs::path, fs::path> >::const_iterator it;
         for (it = m_pending_renames.begin(); it != m_pending_renames.end(); ++it) {
             const fs::path &from((*it).first);
@@ -157,7 +158,7 @@ std::string InteractiveTagger::replace_tokens(const std::string &str,
 }
 
 void InteractiveTagger::tag_file(const boost::filesystem::path &path,
-        std::string *artist, std::string *album, int *year, int track)
+        std::wstring *artist, std::wstring *album, int *year, int track)
 {
     // TODO Implement string filters
 
@@ -167,24 +168,24 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     TagLib::FileRef f(path.string().c_str());
 
     // Ask for the artist
-    boost::optional<std::string> default_artist;
+    boost::optional<std::wstring> default_artist;
     if (artist && !artist->empty())
         default_artist = *artist;
     else if (!f.tag()->artist().isNull())
-        default_artist = TagLib::String(m_input_filter->filter(f.tag()->artist().toWString())).to8Bit();
-    std::string new_artist = m_terminal->ask_string_question("Artist:", default_artist);
-    new_artist = TagLib::String(m_output_filter.filter(TagLib::String(new_artist).toWString())).to8Bit();
+        default_artist = m_input_filter->filter(f.tag()->artist().toWString());
+    std::wstring new_artist = m_terminal->ask_string_question(L"Artist:", default_artist);
+    new_artist = m_output_filter.filter(new_artist);
     f.tag()->setArtist(new_artist);
     if (artist) *artist = new_artist;
 
     // Ask for the album
-    boost::optional<std::string> default_album;
+    boost::optional<std::wstring> default_album;
     if (album && !album->empty())
         default_album = *album;
     else if (!f.tag()->album().isNull())
-        default_album = TagLib::String(m_input_filter->filter(f.tag()->album().toWString())).to8Bit();
-    std::string new_album = m_terminal->ask_string_question("Album:", default_album);
-    new_album = TagLib::String(m_output_filter.filter(TagLib::String(new_album).toWString())).to8Bit();
+        default_album = m_input_filter->filter(f.tag()->album().toWString());
+    std::wstring new_album = m_terminal->ask_string_question(L"Album:", default_album);
+    new_album = m_output_filter.filter(new_album);
     f.tag()->setAlbum(new_album);
     if (album) *album = new_album;
 
@@ -195,7 +196,7 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     else if (f.tag()->year())
         default_year = f.tag()->year();
     YearValidator year_validator;
-    int new_year = m_terminal->ask_number_question("Year:", default_year, &year_validator);
+    int new_year = m_terminal->ask_number_question(L"Year:", default_year, &year_validator);
     f.tag()->setYear(new_year);
     if (year) *year = new_year;
 
@@ -203,15 +204,15 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     if (track == -1)
         track = f.tag()->track();
     TrackValidator track_validator;
-    int new_track = m_terminal->ask_number_question("Track:",
+    int new_track = m_terminal->ask_number_question(L"Track:",
             track > 0 ? track : boost::optional<int>(), &track_validator);
     f.tag()->setTrack(new_track);
 
     // Ask for the song title
-    boost::optional<std::string> default_title;
+    boost::optional<std::wstring> default_title;
     if (!f.tag()->title().isNull())
-        default_title = f.tag()->title().to8Bit();
-    std::string new_title = m_terminal->ask_string_question("Title:", default_title);
+        default_title = f.tag()->title().toWString();
+    std::wstring new_title = m_terminal->ask_string_question(L"Title:", default_title);
     f.tag()->setTitle(new_title);
 
     // Reset the comment and genre fields
@@ -224,13 +225,13 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     // Add it to the list of pending renames based on the supplied format
     if (m_file_rename_format) {
         std::map<std::string, std::string> tokens;
-        tokens["artist"] = new_artist;
-        tokens["album"] = new_album;
+        tokens["artist"] = boost::lexical_cast<std::string>(new_artist);
+        tokens["album"] = boost::lexical_cast<std::string>(new_album);
         tokens["year"] = boost::lexical_cast<std::string>(new_year);
         std::string track_str(boost::lexical_cast<std::string>(new_track));
         if (track_str.size() == 1) track_str = "0" + track_str;
         tokens["track"] = track_str;
-        tokens["title"] = new_title;
+        tokens["title"] = boost::lexical_cast<std::string>(new_title);
         fs::path new_path = path.parent_path();
         new_path /= replace_tokens(*m_file_rename_format, tokens) + boost::to_lower_copy(path.extension());
         if (new_path != path)
@@ -275,7 +276,7 @@ void InteractiveTagger::tag_directory(const fs::path &path)
     dir_list.sort();
 
     // Tag all individual files
-    std::string artist, album;
+    std::wstring artist, album;
     int year = -1;
     if (!file_list.empty()) {
         int track = 1;
@@ -285,15 +286,16 @@ void InteractiveTagger::tag_directory(const fs::path &path)
 
     // We'll ask confirmation to descend into the subdirectories only if there are files
     BOOST_FOREACH(const fs::path &p, dir_list) {
-        if (file_list.empty() || m_terminal->ask_yes_no_question("Descend into subdirectory \"" + p.filename() + "\"?", false))
+        if (file_list.empty() || m_terminal->ask_yes_no_question(L"Descend into subdirectory \""
+                    + boost::lexical_cast<std::wstring>(p.filename()) + L"\"?", false))
             tag_directory(p);
     }
 
     // Add it to the list of pending renames based on the supplied format
     if (!artist.empty() && m_dir_rename_format) {
         std::map<std::string, std::string> tokens;
-        tokens["artist"] = artist;
-        tokens["album"] = album;
+        tokens["artist"] = boost::lexical_cast<std::string>(artist);
+        tokens["album"] = boost::lexical_cast<std::string>(album);
         tokens["year"] = boost::lexical_cast<std::string>(year);
         fs::path new_path = path.parent_path();
         new_path /= replace_tokens(*m_dir_rename_format, tokens);

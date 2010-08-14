@@ -36,8 +36,8 @@ class InteractiveTagger
         std::string replace_tokens(const std::string &str,
                 const std::map<std::string, std::string> &replacements);
 
-        void tag_file(const boost::filesystem::path &path, std::string *artist = NULL,
-                std::string *album = NULL, int *year = NULL, int track = -1);
+        void tag_file(const boost::filesystem::path &path, std::wstring *artist = NULL,
+                std::wstring *album = NULL, int *year = NULL, int track = -1);
         void tag_directory(const boost::filesystem::path &path);
 
         BasicStringFilter *m_input_filter;

@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <getopt.h>
 #include <iostream>
+#include <locale>
 #include <string>
 
 #include "BasicStringFilter.h"
@@ -27,6 +28,9 @@ Usage: \n\
 
 int main(int argc, char **argv)
 {
+    // Set the global locale for case conversion purposes
+    std::locale::global(std::locale(std::locale::classic(), "en_US.UTF-8", std::locale::ctype));
+
     struct option long_options[] = {
         {"dir-rename-format", required_argument, NULL, 'd'},
         {"file-rename-format", required_argument, NULL, 'f'},

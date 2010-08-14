@@ -15,10 +15,10 @@
 class YearValidator : public InteractiveTerminal::Validator<int>
 {
     public:
-        bool validate(const int &year, boost::optional<std::string> &error_message) const
+        bool validate(const int &year, boost::optional<std::wstring> &error_message) const
         {
             if (year > 2500 || year < 1000) {
-                error_message = "The year should be a number between 1000 and 2500";
+                error_message = L"The year should be a number between 1000 and 2500";
                 return false;
             }
             else {
@@ -30,10 +30,10 @@ class YearValidator : public InteractiveTerminal::Validator<int>
 class TrackValidator : public InteractiveTerminal::Validator<int>
 {
     public:
-        bool validate(const int &track, boost::optional<std::string> &error_message) const
+        bool validate(const int &track, boost::optional<std::wstring> &error_message) const
         {
             if (track > 1000 || track < 1) {
-                error_message = "The track should be a number between 1 and 1000";
+                error_message = L"The track should be a number between 1 and 1000";
                 return false;
             }
             else {
