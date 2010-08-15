@@ -15,7 +15,8 @@
 class BasicStringFilter
 {
     public:
-        virtual std::wstring filter(const std::wstring &input);
+        virtual std::wstring filter(const std::wstring &input) const;
+        virtual bool requires_confirmation_as_output_filter() const { return false; }
 };
 
 #endif

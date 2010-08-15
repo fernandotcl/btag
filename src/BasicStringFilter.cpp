@@ -11,7 +11,7 @@
 
 #include "BasicStringFilter.h"
 
-std::wstring BasicStringFilter::filter(const std::wstring &input)
+std::wstring BasicStringFilter::filter(const std::wstring &input) const
 {
     std::wstring res;
     res.reserve(input.size());

@@ -23,6 +23,11 @@
 
 namespace fs = boost::filesystem;
 
+InteractiveTagger::InteractiveTagger()
+    : m_input_filter(NULL), m_output_filter(NULL)
+{
+}
+
 void InteractiveTagger::tag(int num_paths, const char **paths)
 {
     assert(m_terminal);
@@ -160,8 +165,6 @@ std::string InteractiveTagger::replace_tokens(const std::string &str,
 void InteractiveTagger::tag_file(const boost::filesystem::path &path,
         std::wstring *artist, std::wstring *album, int *year, int track)
 {
-    // TODO Implement string filters
-
     m_terminal->display_info_message("=== Tagging \"" + path.filename() + "\"");
 
     // Get a reference to the file
@@ -174,7 +177,12 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     else if (!f.tag()->artist().isNull())
         default_artist = m_input_filter->filter(f.tag()->artist().toWString());
     std::wstring new_artist = m_terminal->ask_string_question(L"Artist:", default_artist);
-    new_artist = m_output_filter.filter(new_artist);
+    if (m_output_filter) {
+        std::wstring filtered_artist = m_output_filter->filter(new_artist);
+        if (m_input_filter->requires_confirmation_as_output_filter() && filtered_artist != new_artist)
+            filtered_artist = m_terminal->ask_string_question(L"Artist (confirmation):", filtered_artist);
+        new_artist = filtered_artist;
+    }
     f.tag()->setArtist(new_artist);
     if (artist) *artist = new_artist;
 
@@ -185,7 +193,12 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     else if (!f.tag()->album().isNull())
         default_album = m_input_filter->filter(f.tag()->album().toWString());
     std::wstring new_album = m_terminal->ask_string_question(L"Album:", default_album);
-    new_album = m_output_filter.filter(new_album);
+    if (m_output_filter) {
+        std::wstring filtered_album = m_output_filter->filter(new_album);
+        if (m_input_filter->requires_confirmation_as_output_filter() && filtered_album != new_album)
+            filtered_album = m_terminal->ask_string_question(L"Album (confirmation):", filtered_album);
+        new_album = filtered_album;
+    }
     f.tag()->setAlbum(new_album);
     if (album) *album = new_album;
 
@@ -213,6 +226,12 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     if (!f.tag()->title().isNull())
         default_title = f.tag()->title().toWString();
     std::wstring new_title = m_terminal->ask_string_question(L"Title:", default_title);
+    if (m_output_filter) {
+        std::wstring filtered_title = m_output_filter->filter(new_title);
+        if (m_input_filter->requires_confirmation_as_output_filter() && filtered_title != new_title)
+            filtered_title = m_terminal->ask_string_question(L"Title (confirmation):", filtered_title);
+        new_title = filtered_title;
+    }
     f.tag()->setTitle(new_title);
 
     // Reset the comment and genre fields

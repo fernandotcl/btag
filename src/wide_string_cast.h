@@ -21,9 +21,8 @@ namespace boost
     inline std::wstring lexical_cast<std::wstring, std::string>(const std::string &arg)
     {
 		std::wstring result;
-		std::locale loc;
 		for (std::string::size_type i = 0; i < arg.size(); ++i)
-			result += std::use_facet<std::ctype<wchar_t> >(loc).widen(arg[i]);
+			result += std::use_facet<std::ctype<wchar_t> >(std::locale()).widen(arg[i]);
 		return result;
     }
 
@@ -33,7 +32,7 @@ namespace boost
 		std::string result;
 		std::locale loc;
 		for (std::wstring::size_type i = 0; i < arg.size(); ++i)
-			result += std::use_facet<std::ctype<wchar_t> >(loc).narrow(arg[i], '?');
+			result += std::use_facet<std::ctype<wchar_t> >(std::locale()).narrow(arg[i], '?');
 		return result;
     }
 }

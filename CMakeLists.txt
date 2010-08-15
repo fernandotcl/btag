@@ -17,12 +17,16 @@ set(QTAGGER_SOURCES
     src/BasicStringFilter.cpp
     src/InteractiveTagger.cpp
     src/main.cpp
-    src/StandardConsole.cpp)
+    src/StandardConsole.cpp
+    src/TitleCapitalizationFilter.cpp)
 
 set(QTAGGER_HEADERS
     src/BasicStringFilter.h
+    src/CapitalizationFilter.h
     src/InteractiveTagger.h
-    src/StandardConsole.h)
+    src/StandardConsole.h
+    src/TitleCapitalizationFilter.h
+    src/wide_string_cast.h)
 
 include_directories(${Boost_INCLUDE_DIRS} ${TAGLIB_INCLUDE_DIRS})
 

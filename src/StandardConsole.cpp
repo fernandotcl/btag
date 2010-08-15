@@ -131,7 +131,7 @@ void StandardConsole::display_info_message(const std::wstring &message)
 
 void StandardConsole::display_warning_message(const std::string &message)
 {
-    std::cerr << L"WARNING: " << message << std::endl;
+    std::cerr << "WARNING: " << message << std::endl;
 }
 
 void StandardConsole::display_warning_message(const std::wstring &message)
