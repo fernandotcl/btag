@@ -32,8 +32,8 @@ Usage: \n\
 Available filters: basic, first_upper, lower, title, upper\n\
 \n\
 Example:\n\
-    qtagger --file-rename-format '%%track. %%album' \\\n\
-        --dir-rename-format '%%album (%%year)' \\\n\
+    qtagger --file-rename-format '%track. %album' \\\n\
+        --dir-rename-format '%album (%year)' \\\n\
         --input-filter title --output-filter basic\n\
 " << std::endl;
 }
