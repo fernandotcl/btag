@@ -17,6 +17,7 @@ set(QTAGGER_SOURCES
     src/BasicStringFilter.cpp
     src/InteractiveTagger.cpp
     src/main.cpp
+    src/SimpleCapitalizationFilter.cpp
     src/StandardConsole.cpp
     src/TitleCapitalizationFilter.cpp)
 
@@ -24,6 +25,7 @@ set(QTAGGER_HEADERS
     src/BasicStringFilter.h
     src/CapitalizationFilter.h
     src/InteractiveTagger.h
+    src/SimpleCapitalizationFilter.h
     src/StandardConsole.h
     src/TitleCapitalizationFilter.h
     src/wide_string_cast.h)

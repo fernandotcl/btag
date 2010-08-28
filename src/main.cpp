@@ -16,6 +16,7 @@
 
 #include "BasicStringFilter.h"
 #include "InteractiveTagger.h"
+#include "SimpleCapitalizationFilter.h"
 #include "StandardConsole.h"
 #include "TitleCapitalizationFilter.h"
 
@@ -28,7 +29,7 @@ Usage: \n\
             <path> [path2] [path3] ...\n\
     qtagger --help\n\
 \n\
-Available filters: basic, title\n\
+Available filters: basic, first_upper, lower, title, upper\n\
 \n\
 Example:\n\
     qtagger --file-rename-format '%%track. %%album' \\\n\
@@ -43,6 +44,12 @@ static BasicStringFilter *select_string_filter(const std::string &filter)
         return new BasicStringFilter;
     else if (filter == "title")
         return new TitleCapitalizationFilter;
+    else if (filter == "lower")
+        return new SimpleCapitalizationFilter(SimpleCapitalizationFilter::CAPITALIZATION_MODE_ALL_LOWER);
+    else if (filter == "upper")
+        return new SimpleCapitalizationFilter(SimpleCapitalizationFilter::CAPITALIZATION_MODE_ALL_UPPER);
+    else if (filter == "first_upper")
+        return new SimpleCapitalizationFilter(SimpleCapitalizationFilter::CAPITALIZATION_MODE_FIRST_UPPER);
     else
         return NULL;
 }
