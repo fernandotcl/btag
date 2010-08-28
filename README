@@ -29,7 +29,5 @@ for more information on the supported switches.
 Future goals
 ============
 
-qtagger is already usable as of now. Some features we'd like to see
-implemented in the future are:
-
-* Support for renaming filters to work around filesystem limitations
+qtagger is already usable as of now. It wouldn't hurt to bring more features
+from EasyTAG or to provide more control on specific tags.

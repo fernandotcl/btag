@@ -19,6 +19,9 @@ Use \fIfilter\fR as both the input and the output filter
 .B -h\fR/\fB--help
 Display usage information and exit
 .TP
+.B -n\fR/\fB--renaming_filter \fIfilter
+Use \fIfilter\fR as the renaming filter
+.TP
 .B -o\fR/\fB--output-filter \fIfilter
 Use \fIfilter\fR as the input filter
 .TP
@@ -29,7 +32,7 @@ Use \fIformat\fR to rename the multimedia files
 Use \fIlocale\fR for proper (although lax) locale-specific title casing
 .PP
 Multiple paths to multimedia files or directories containing multimedia files can be specified.
-.SH FILTERS
+.SH INPUT AND OUTPUT FILTERS
 qtagger supports input and output filters that are applied to the text fields (artist, album and song title). Those filters can protect against basic mistakes such as duplicate whitespace. Input filters are used on the tags as they are loaded from the multimedia files. This filtered information is used to provide suggestions to the user when the interactive tagger requests information for those text fields. If an output filter is configured, the user input is then filtered, and if the filtered text does not match the user input, the user is asked for confirmation.
 
 In most cases, the input filter should match the output filter (which is why the \fB-f\fR option is handy). You may choose to specify only an input filter, in which case the user input is not filtered. If you don't specify an input filter, though, the default input filter will be used.
@@ -80,13 +83,22 @@ Renaming happens after the tags are written, and it's relative to qtagger's work
 For directory renaming, the last known artist, album and year information is used. Only directories that contain files that were tagged by qtagger are renamed.
 
 qtagger does not prevent you from overwriting existing files using the formats described here.
+.SH RENAMING FILTERS
+Renaming filters are used to ensure that the file and directory names generated using the renaming formats (if specified) are valid (safe) in the context of the current file system. The following renaming filters are currently available:
+.TP 14
+.B conservative
+Conservative character replacements are performed, recommended for FAT32 file systems
+.TP
+.B unix
+Generates file and directory names that should be valid in an Unix environment (default)
 .SH EXAMPLES
-Using title casing with English rules and sensible renaming formats:
+Using title casing with English rules and sensible renaming formats generating FAT32-safe file and directory names:
 
 .nf
 $ qtagger --file-rename-format '%track. %album' \\
     --dir-rename-format '%album (%year)' \\
-    --filter title --title-locale en /path/to/myalbum
+    --filter title --title-locale en \\
+    --renaming-format conservative /path/to/myalbum
 .fi
 
 Using an input filter only:
