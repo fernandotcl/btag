@@ -33,7 +33,7 @@ Usage: \n\
             [--title-locale locale] <path> [path2] [path3] ...\n\
     qtagger --help\n\
 \n\
-Available filters: basic, first_upper, lower, title, upper\n\
+Available filters: basic, first-upper, lower, title, upper\n\
 \n\
 Available title locales: en (English)\n\
 \n\
@@ -54,7 +54,7 @@ static BasicStringFilter *select_string_filter(const std::string &filter)
         return new SimpleCapitalizationFilter(SimpleCapitalizationFilter::CAPITALIZATION_MODE_ALL_LOWER);
     else if (filter == "upper")
         return new SimpleCapitalizationFilter(SimpleCapitalizationFilter::CAPITALIZATION_MODE_ALL_UPPER);
-    else if (filter == "first_upper")
+    else if (filter == "first-upper")
         return new SimpleCapitalizationFilter(SimpleCapitalizationFilter::CAPITALIZATION_MODE_FIRST_UPPER);
     else
         return NULL;
