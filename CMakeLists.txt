@@ -37,4 +37,14 @@ include_directories(${Boost_INCLUDE_DIRS} ${TAGLIB_INCLUDE_DIRS})
 add_executable(qtagger ${QTAGGER_SOURCES} ${QTAGGER_HEADERS})
 target_link_libraries(qtagger ${Boost_LIBRARIES} ${TAGLIB_LIBRARIES})
 
+add_custom_target(dist
+    COMMAND nroff -t man man/qtagger.1.roff >man/qtagger.1
+    COMMAND git describe --tags --abbrev=0 >version
+    COMMAND git archive --prefix=qtagger-`cat version`/ HEAD >qtagger-`cat version`.tar
+    COMMAND tar --transform s@^@qtagger-`cat version`/@ -rf qtagger-`cat version`.tar man/qtagger.1
+    COMMAND gzip qtagger-`cat version`.tar
+    COMMAND mv qtagger-`cat version`.tar.gz ${CMAKE_BINARY_DIR}
+    COMMAND rm -f version man/qtagger.1
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 install(TARGETS qtagger DESTINATION bin)
