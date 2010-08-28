@@ -22,7 +22,7 @@ class EnglishTitleLocalizationHandler : public TitleLocalizationHandler
 
             static const wchar_t *lowercase_words[] = {
                 L"and", L"but", L"or", L"nor", L"to", L"over", L"an", L"a",
-                L"the", L"at", L"by", L"for", L"in", L"of", L"on", NULL
+                L"the", L"at", L"by", L"for", L"in", L"of", L"on", L"be", L"is", NULL
             };
 
             for (int i = 0; lowercase_words[i]; ++i) {
