@@ -94,11 +94,11 @@ int main(int argc, char **argv)
                 break;
             case 'f':
                 input_filter.reset(select_string_filter(optarg));
-                if (!input_filter.get()) {
+                output_filter.reset(select_string_filter(optarg));
+                if (!input_filter.get() || !output_filter.get()) {
                     print_usage(std::cerr);
                     return EXIT_FAILURE;
                 }
-                output_filter.reset(select_string_filter(optarg));
                 break;
             case 'i':
                 input_filter.reset(select_string_filter(optarg));
