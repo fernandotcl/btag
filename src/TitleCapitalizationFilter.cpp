@@ -11,26 +11,42 @@
 #include <boost/tokenizer.hpp>
 
 #include "TitleCapitalizationFilter.h"
+#include "TitleLocalizationHandler.h"
+
+std::wstring TitleCapitalizationFilter::filtered_word(const std::wstring &word, size_t index) const
+{
+    std::wstring new_word;
+    new_word.reserve(word.size());
+    for (std::wstring::size_type i = 0; i < word.size(); ++i)
+        new_word += lowercase(word[i]);
+
+    TitleLocalizationHandler::word_style style = TitleLocalizationHandler::WORD_STYLE_FIRST_UPPER;
+    if (m_handler) style = m_handler->word_style_for_word(word, index);
+
+    if (style == TitleLocalizationHandler::WORD_STYLE_UPPER) {
+        for (std::wstring::size_type i = 0; i < word.size(); ++i)
+            new_word += uppercase(word[i]);
+    }
+    else if (style == TitleLocalizationHandler::WORD_STYLE_FIRST_UPPER) {
+        new_word[0] = uppercase(word[0]);
+    }
+
+    return new_word;
+}
 
 std::wstring TitleCapitalizationFilter::filter(const std::wstring &input) const
 {
-    // TODO Use language-specific filters for real title casing
-
     std::wstring processed = BasicStringFilter::filter(input);
 
     std::wstring res;
     res.reserve(processed.size());
 
+    size_t word_index = 0;
     boost::char_separator<wchar_t> separator(L" ");
     boost::tokenizer<boost::char_separator<wchar_t>, std::wstring::const_iterator, std::wstring > words(processed, separator);
     BOOST_FOREACH(const std::wstring &word, words) {
-        std::wstring new_word;
-        new_word.reserve(word.size());
-        new_word += uppercase(word[0]);
-        for (std::wstring::size_type i = 1; i < word.size(); ++i)
-            new_word += lowercase(word[i]);
         if (!res.empty()) res += L' ';
-        res += new_word;
+        res += filtered_word(word, word_index++);
     }
 
     return res;

@@ -24,10 +24,12 @@ set(QTAGGER_SOURCES
 set(QTAGGER_HEADERS
     src/BasicStringFilter.h
     src/CapitalizationFilter.h
+    src/EnglishTitleLocalizationHandler.h
     src/InteractiveTagger.h
     src/SimpleCapitalizationFilter.h
     src/StandardConsole.h
     src/TitleCapitalizationFilter.h
+    src/TitleLocalizationHandler.h
     src/wide_string_cast.h)
 
 include_directories(${Boost_INCLUDE_DIRS} ${TAGLIB_INCLUDE_DIRS})
