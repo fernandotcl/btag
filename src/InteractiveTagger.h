@@ -28,8 +28,8 @@ class InteractiveTagger
         InteractiveTagger();
 
         void set_terminal(InteractiveTerminal *terminal) { m_terminal = terminal; }
-        void set_file_rename_format(const std::string &format) { m_file_rename_format = format; }
-        void set_dir_rename_format(const std::string &format) { m_dir_rename_format = format; }
+        void set_file_rename_format(const std::string &format);
+        void set_dir_rename_format(const std::string &format);
 
         void set_input_filter(BasicStringFilter *filter) { m_input_filter = filter; }
         void set_output_filter(BasicStringFilter *filter) { m_output_filter = filter; }
@@ -38,21 +38,20 @@ class InteractiveTagger
         void tag(int num_paths, const char **paths);
 
     private:
-        bool is_supported_extension(const boost::filesystem::path &path);
-        std::string replace_tokens(const std::string &str,
-                const std::map<std::string, std::string> &replacements);
+        bool is_supported_extension(const boost::filesystem::wpath &path);
+        std::wstring replace_tokens(const std::wstring &str, const std::map<std::wstring, std::wstring> &replacements);
 
-        void tag_file(const boost::filesystem::path &path, std::wstring *artist = NULL,
+        void tag_file(const boost::filesystem::wpath &path, std::wstring *artist = NULL,
                 std::wstring *album = NULL, int *year = NULL, int track = -1);
-        void tag_directory(const boost::filesystem::path &path);
+        void tag_directory(const boost::filesystem::wpath &path);
 
         BasicStringFilter *m_input_filter, *m_output_filter;
         RenamingFilter *m_renaming_filter;
         InteractiveTerminal *m_terminal;
-        boost::optional<std::string> m_file_rename_format, m_dir_rename_format;
+        boost::optional<std::wstring> m_file_rename_format, m_dir_rename_format;
 
         std::list<TagLib::FileRef> m_unsaved_files;
-        std::list<std::pair<boost::filesystem::path, boost::filesystem::path> > m_pending_renames;
+        std::list<std::pair<boost::filesystem::wpath, boost::filesystem::wpath> > m_pending_renames;
 };
 
 #endif
