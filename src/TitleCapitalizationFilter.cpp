@@ -15,20 +15,40 @@
 
 std::wstring TitleCapitalizationFilter::filtered_word(const std::wstring &word, size_t index) const
 {
-    std::wstring new_word;
-    new_word.reserve(word.size());
-    for (std::wstring::size_type i = 0; i < word.size(); ++i)
-        new_word += lowercase(word[i]);
+    std::wstring check_word;
+    check_word.reserve(word.size());
+    BOOST_FOREACH(wchar_t c, word) {
+        if (c != L'(' && c != L')')
+            check_word += lowercase(c);
+    }
 
     TitleLocalizationHandler::word_style style = TitleLocalizationHandler::WORD_STYLE_FIRST_UPPER;
-    if (m_handler) style = m_handler->word_style_for_word(new_word, index);
+    if (m_handler && check_word.size()) style = m_handler->word_style_for_word(check_word, index);
 
-    if (style == TitleLocalizationHandler::WORD_STYLE_UPPER) {
-        for (std::wstring::size_type i = 0; i < word.size(); ++i)
-            new_word += uppercase(word[i]);
-    }
-    else if (style == TitleLocalizationHandler::WORD_STYLE_FIRST_UPPER) {
-        new_word[0] = uppercase(word[0]);
+    std::wstring new_word;
+    new_word.reserve(word.size());
+
+    switch (style) {
+        case TitleLocalizationHandler::WORD_STYLE_LOWER:
+            BOOST_FOREACH(wchar_t c, word) new_word += lowercase(c);
+            break;
+        case TitleLocalizationHandler::WORD_STYLE_UPPER:
+            BOOST_FOREACH(wchar_t c, word) new_word += uppercase(c);
+            break;
+        case TitleLocalizationHandler::WORD_STYLE_FIRST_UPPER:
+            {
+                bool upped_first = false;
+                BOOST_FOREACH(wchar_t c, word) {
+                    if (!upped_first && c != L'(') {
+                        new_word += uppercase(c);
+                        upped_first = true;
+                    }
+                    else {
+                        new_word += lowercase(c);
+                    }
+                }
+                break;
+            }
     }
 
     return new_word;
