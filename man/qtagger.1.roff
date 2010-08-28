@@ -1,0 +1,96 @@
+.TH QTAGGER 1 LOCAL
+.SH NAME
+qtagger - A command line based multimedia tagger
+.SH SYNOPSIS
+.B qtagger
+[\fIoptions\fR] \fIpath1\fR [\fIpath2\fR] [\fIpath3\fR] ...
+.SH DESCRIPTION
+qtagger is a command line multimedia tagger. It uses the existent tags found in the supplied files as well as user input to determine new values for the tags. It can also optionally rename files and directories based on such tags.
+.TP 33
+.B -d\fR/\fB--dir-rename-format \fIformat
+Use \fIformat\fR to rename the directories where the multimedia files were found
+.TP
+.B -i\fR/\fB--input-filter \fIfilter
+Use \fIfilter\fR as the input filter
+.TP
+.B -f\fR/\fB--filter \fIfilter
+Use \fIfilter\fR as both the input and the output filter
+.TP
+.B -h\fR/\fB--help
+Display usage information and exit
+.TP
+.B -o\fR/\fB--output-filter \fIfilter
+Use \fIfilter\fR as the input filter
+.TP
+.B -r\fR/\fB--file-rename-format \fIformat
+Use \fIformat\fR to rename the multimedia files
+.TP
+.B -t\fR/\fB--title-locale \fIlocale
+Use \fIlocale\fR for proper (although lax) locale-specific title casing
+.PP
+Multiple paths to multimedia files or directories containing multimedia files can be specified.
+.SH FILTERS
+qtagger supports input and output filters that are applied to the text fields (artist, album and song title). Those filters can protect against basic mistakes such as duplicate whitespace. Input filters are used on the tags as they are loaded from the multimedia files. This filtered information is used to provide suggestions to the user when the interactive tagger requests information for those text fields. If an output filter is configured, the user input is then filtered, and if the filtered text does not match the user input, the user is asked for confirmation.
+
+In most cases, the input filter should match the output filter (which is why the \fB-f\fR option is handy). You may choose to specify only an input filter, in which case the user input is not filtered. If you don't specify an input filter, though, the default input filter will be used.
+
+The currently available filters are:
+.TP 14
+.B basic
+Provides basic filtering by removing duplicate or trailing whitespace, is the default input filter and the base for all other filters
+.TP
+.B first_upper
+The first character in the field is uppercased, while all others are lowercased
+.TP
+.B lower
+All characters are lowercased
+.TP
+.B title
+The first character of each word is uppercased (with exceptions), while all others are lowercased
+.TP
+.B upper
+All characters are uppercased
+.PP
+If a title locale is specified (option \fB-t\fR), the title capitalization will loosely follow locale-specific rules. Note that strict title capitalization rules often depend on the context in which the words are used, the precise analysis of which is much beyond the scope of qtagger. The currently supported title locale specifications are:
+.TP 4
+.B en
+English
+.SH RENAMING FORMATS
+If a format is specified with the \fB-r\fR option, the tagged multimedia files are renamed accordingly. Likewise, if the \fB-d\fR option is used, the directory in which multimedia files were tagged is renamed according to the specified format.
+
+The specified format is converted to a file or directory name using the following substitutions:
+.TP 9
+.B %artist
+Artist name
+.TP
+.B %album
+Album name
+.TP
+.B %year
+Year of release
+.TP
+.B %track
+Track number (only replaced by the \fB-r\fR option)
+.TP
+.B %title
+Song title (only replaced by the \fB-r\fR option)
+.PP
+Renaming happens after the tags are written, and it's relative to qtagger's working directory.
+
+For directory renaming, the last known artist, album and year information is used. Only directories that contain files that were tagged by qtagger are renamed.
+
+qtagger does not prevent you from overwriting existing files using the formats described here, so please pay attention to the confirmation messages.
+.SH EXAMPLES
+Using title casing with English rules and sensible renaming formats:
+
+.nf
+$ qtagger --file-rename-format '%track. %album' \\
+    --dir-rename-format '%album (%year)' \\
+    --filter title --title-locale en /path/to/myalbum
+.fi
+
+Using an input filter only:
+
+.nf
+$ qtagger --input-filter lower /path/to/myalbum
+.fi

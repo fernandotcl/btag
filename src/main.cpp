@@ -40,7 +40,7 @@ Available title locales: en (English)\n\
 Example:\n\
     qtagger --file-rename-format '%track. %album' \\\n\
         --dir-rename-format '%album (%year)' \\\n\
-        --filter title --locale en\n\
+        --filter title --title-locale en /path/to/myalbum\n\
 " << std::endl;
 }
 

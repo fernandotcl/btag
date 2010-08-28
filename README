@@ -9,8 +9,9 @@ EasyTAG[1] as both allow you to tag a lot of songs in batches.
 The following features are implemented:
 
 * Tagging of a vast number of formats supported by TagLib[2]
-* Tag normalization
-* Renaming of directories
+* Tag normalization and filtering
+* Locale-aware title capitalization
+* Renaming of files and directories
 
 References:
 
@@ -31,6 +32,4 @@ Future goals
 qtagger is already usable as of now. Some features we'd like to see
 implemented in the future are:
 
-* Support for language-dependent automatic capitalization
 * Support for renaming filters to work around filesystem limitations
-* Support for different output filters with user confirmation
