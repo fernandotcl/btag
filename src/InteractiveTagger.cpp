@@ -244,13 +244,13 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     // Add it to the list of pending renames based on the supplied format
     if (m_file_rename_format) {
         std::map<std::string, std::string> tokens;
-        tokens["artist"] = boost::lexical_cast<std::string>(new_artist);
-        tokens["album"] = boost::lexical_cast<std::string>(new_album);
+        tokens["artist"] = boost::lexical_cast<std::string>(m_renaming_filter->filter(new_artist));
+        tokens["album"] = boost::lexical_cast<std::string>(m_renaming_filter->filter(new_album));
         tokens["year"] = boost::lexical_cast<std::string>(new_year);
         std::string track_str(boost::lexical_cast<std::string>(new_track));
         if (track_str.size() == 1) track_str = "0" + track_str;
         tokens["track"] = track_str;
-        tokens["title"] = boost::lexical_cast<std::string>(new_title);
+        tokens["title"] = boost::lexical_cast<std::string>(m_renaming_filter->filter(new_title));
         fs::path new_path = path.parent_path();
         new_path /= replace_tokens(*m_file_rename_format, tokens) + boost::to_lower_copy(path.extension());
         if (new_path != path)
@@ -313,8 +313,8 @@ void InteractiveTagger::tag_directory(const fs::path &path)
     // Add it to the list of pending renames based on the supplied format
     if (!artist.empty() && m_dir_rename_format) {
         std::map<std::string, std::string> tokens;
-        tokens["artist"] = boost::lexical_cast<std::string>(artist);
-        tokens["album"] = boost::lexical_cast<std::string>(album);
+        tokens["artist"] = boost::lexical_cast<std::string>(m_renaming_filter->filter(artist));
+        tokens["album"] = boost::lexical_cast<std::string>(m_renaming_filter->filter(album));
         tokens["year"] = boost::lexical_cast<std::string>(year);
         fs::path new_path = path.parent_path();
         new_path /= replace_tokens(*m_dir_rename_format, tokens);

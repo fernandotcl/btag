@@ -15,32 +15,39 @@
 #include <string>
 
 #include "BasicStringFilter.h"
+#include "ConservativeRenamingFilter.h"
 #include "EnglishTitleLocalizationHandler.h"
 #include "InteractiveTagger.h"
+#include "RenamingFilter.h"
 #include "SimpleCapitalizationFilter.h"
 #include "StandardConsole.h"
 #include "TitleCapitalizationFilter.h"
 #include "TitleLocalizationHandler.h"
+#include "UnixRenamingFilter.h"
 
 static void print_usage(std::ostream &out)
 {
     out << "\
 Usage: \n\
     qtagger [--dir-rename-format] [--file-rename-format format] \\\n\
-            [--filter filter] [--title-locale locale] <path> [path2] [path3] ...\n\
+            [--filter filter] [--title-locale locale] \n\
+            [--renaming-filter filter] <path> [path2] [path3] ...\n\
     qtagger [--dir-rename-format] [--file-rename-format format] \\\n\
             [--input-filter filter] [--output-filter filter] \\\n\
             [--title-locale locale] <path> [path2] [path3] ...\n\
     qtagger --help\n\
 \n\
-Available filters: basic, first-upper, lower, title, upper\n\
+Available input/output filters: basic, first-upper, lower, title, upper\n\
+\n\
+Available renaming filters: conservative, unix\n\
 \n\
 Available title locales: en (English)\n\
 \n\
 Example:\n\
     qtagger --file-rename-format '%track. %album' \\\n\
         --dir-rename-format '%album (%year)' \\\n\
-        --filter title --title-locale en /path/to/myalbum\n\
+        --filter title --title-locale en \\\n\
+        --renaming-filter unix /path/to/myalbum\n\
 " << std::endl;
 }
 
@@ -68,6 +75,16 @@ static TitleLocalizationHandler *select_title_localization_handler(const std::st
         return NULL;
 }
 
+static RenamingFilter *select_renaming_filter(const std::string &filter)
+{
+    if (filter == "unix")
+        return new UnixRenamingFilter;
+    else if (filter == "conservative")
+        return new ConservativeRenamingFilter;
+    else
+        return NULL;
+}
+
 int main(int argc, char **argv)
 {
     // Set the global locale for case conversion purposes
@@ -90,6 +107,7 @@ int main(int argc, char **argv)
         {"filter", required_argument, NULL, 'f'},
         {"help", no_argument, NULL, 'h'},
         {"output-filter", required_argument, NULL, 'o'},
+        {"renaming-filter", required_argument, NULL, 'n'},
         {"title-locale", required_argument, NULL, 't'},
         {NULL, 0, NULL, 0}
     };
@@ -98,10 +116,11 @@ int main(int argc, char **argv)
     InteractiveTagger itag;
     boost::scoped_ptr<BasicStringFilter> input_filter, output_filter;
     boost::scoped_ptr<TitleLocalizationHandler> title_localization_handler;
+    boost::scoped_ptr<RenamingFilter> renaming_filter;
 
     // Parse the command line options
     int opt;
-    while ((opt = getopt_long(argc, argv, "d:i:f:o:hr:t:", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "d:i:f:o:hn:r:t:", long_options, NULL)) != -1) {
         switch (opt) {
             case 'd':
                 itag.set_dir_rename_format(optarg);
@@ -127,6 +146,13 @@ int main(int argc, char **argv)
             case 'o':
                 output_filter.reset(select_string_filter(optarg));
                 if (!output_filter.get()) {
+                    print_usage(std::cerr);
+                    return EXIT_FAILURE;
+                }
+                break;
+            case 'n':
+                renaming_filter.reset(select_renaming_filter(optarg));
+                if (!renaming_filter.get()) {
                     print_usage(std::cerr);
                     return EXIT_FAILURE;
                 }
@@ -166,6 +192,11 @@ int main(int argc, char **argv)
         input_filter.reset(new BasicStringFilter);
     itag.set_input_filter(input_filter.get());
     itag.set_output_filter(output_filter.get());
+
+    // Add the renaming filter
+    if (!renaming_filter.get())
+        renaming_filter.reset(new UnixRenamingFilter);
+    itag.set_renaming_filter(renaming_filter.get());
 
     // Create the interactive terminal
     StandardConsole console;
