@@ -21,7 +21,7 @@ std::wstring TitleCapitalizationFilter::filtered_word(const std::wstring &word, 
         new_word += lowercase(word[i]);
 
     TitleLocalizationHandler::word_style style = TitleLocalizationHandler::WORD_STYLE_FIRST_UPPER;
-    if (m_handler) style = m_handler->word_style_for_word(word, index);
+    if (m_handler) style = m_handler->word_style_for_word(new_word, index);
 
     if (style == TitleLocalizationHandler::WORD_STYLE_UPPER) {
         for (std::wstring::size_type i = 0; i < word.size(); ++i)
