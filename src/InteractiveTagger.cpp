@@ -224,7 +224,7 @@ void InteractiveTagger::tag_file(const boost::filesystem::path &path,
     // Ask for the song title
     boost::optional<std::wstring> default_title;
     if (!f.tag()->title().isNull())
-        default_title = f.tag()->title().toWString();
+        default_title = m_input_filter->filter(f.tag()->title().toWString());
     std::wstring new_title = m_terminal->ask_string_question(L"Title:", default_title);
     if (m_output_filter) {
         std::wstring filtered_title = m_output_filter->filter(new_title);
