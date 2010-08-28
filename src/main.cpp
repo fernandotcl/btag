@@ -25,6 +25,8 @@ static void print_usage(std::ostream &out)
     out << "\
 Usage: \n\
     qtagger [--dir-rename-format] [--file-rename-format format] \\\n\
+            [--filter filter] <path> [path2] [path3] ...\n\
+    qtagger [--dir-rename-format] [--file-rename-format format] \\\n\
             [--input-filter filter] [--output-filter filter] \\\n\
             <path> [path2] [path3] ...\n\
     qtagger --help\n\
@@ -34,7 +36,7 @@ Available filters: basic, first_upper, lower, title, upper\n\
 Example:\n\
     qtagger --file-rename-format '%track. %album' \\\n\
         --dir-rename-format '%album (%year)' \\\n\
-        --input-filter title --output-filter basic\n\
+        --filter title\n\
 " << std::endl;
 }
 
@@ -72,7 +74,8 @@ int main(int argc, char **argv)
     struct option long_options[] = {
         {"dir-rename-format", required_argument, NULL, 'd'},
         {"input-filter", required_argument, NULL, 'i'},
-        {"file-rename-format", required_argument, NULL, 'f'},
+        {"file-rename-format", required_argument, NULL, 'r'},
+        {"filter", required_argument, NULL, 'f'},
         {"help", no_argument, NULL, 'h'},
         {"output-filter", required_argument, NULL, 'o'},
         {NULL, 0, NULL, 0}
@@ -90,7 +93,12 @@ int main(int argc, char **argv)
                 itag.set_dir_rename_format(optarg);
                 break;
             case 'f':
-                itag.set_file_rename_format(optarg);
+                input_filter.reset(select_string_filter(optarg));
+                if (!input_filter.get()) {
+                    print_usage(std::cerr);
+                    return EXIT_FAILURE;
+                }
+                output_filter.reset(select_string_filter(optarg));
                 break;
             case 'i':
                 input_filter.reset(select_string_filter(optarg));
@@ -108,6 +116,9 @@ int main(int argc, char **argv)
                     print_usage(std::cerr);
                     return EXIT_FAILURE;
                 }
+                break;
+            case 'r':
+                itag.set_file_rename_format(optarg);
                 break;
             default:
                 print_usage(std::cerr);
