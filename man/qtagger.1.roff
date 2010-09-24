@@ -95,7 +95,7 @@ Generates file and directory names that should be valid in an Unix environment (
 Using title casing with English rules and sensible renaming formats generating FAT32-safe file and directory names:
 
 .nf
-$ qtagger --file-rename-format '%track. %album' \\
+$ qtagger --file-rename-format '%track. %title' \\
     --dir-rename-format '%album (%year)' \\
     --filter title --title-locale en \\
     --renaming-format conservative /path/to/myalbum

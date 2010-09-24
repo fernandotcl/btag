@@ -44,7 +44,7 @@ Available renaming filters: conservative, unix\n\
 Available title locales: en (English)\n\
 \n\
 Example:\n\
-    qtagger --file-rename-format '%track. %album' \\\n\
+    qtagger --file-rename-format '%track. %title' \\\n\
         --dir-rename-format '%album (%year)' \\\n\
         --filter title --title-locale en \\\n\
         --renaming-filter unix /path/to/myalbum\n\
