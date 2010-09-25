@@ -20,6 +20,7 @@ set(QTAGGER_SOURCES
     src/main.cpp
     src/RenamingFilter.cpp
     src/SimpleCapitalizationFilter.cpp
+    src/SpanishTitleLocalizationHandler.cpp
     src/StandardConsole.cpp
     src/TitleCapitalizationFilter.cpp
     src/TitleLocalizationHandler.cpp)
@@ -32,6 +33,7 @@ set(QTAGGER_HEADERS
     src/InteractiveTagger.h
     src/RenamingFilter.h
     src/SimpleCapitalizationFilter.h
+    src/SpanishTitleLocalizationHandler.h
     src/StandardConsole.h
     src/TitleCapitalizationFilter.h
     src/TitleLocalizationHandler.h

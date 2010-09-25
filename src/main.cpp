@@ -20,6 +20,7 @@
 #include "InteractiveTagger.h"
 #include "RenamingFilter.h"
 #include "SimpleCapitalizationFilter.h"
+#include "SpanishTitleLocalizationHandler.h"
 #include "StandardConsole.h"
 #include "TitleCapitalizationFilter.h"
 #include "TitleLocalizationHandler.h"
@@ -41,7 +42,7 @@ Available input/output filters: basic, first-upper, lower, title, upper\n\
 \n\
 Available renaming filters: conservative, unix\n\
 \n\
-Available title locales: en (English)\n\
+Available title locales: en (English), es (Spanish)\n\
 \n\
 Example:\n\
     qtagger --file-rename-format '%track. %title' \\\n\
@@ -71,6 +72,8 @@ static TitleLocalizationHandler *select_title_localization_handler(const std::st
 {
     if (locale == "en")
         return new EnglishTitleLocalizationHandler;
+    else if (locale == "es")
+        return new SpanishTitleLocalizationHandler;
     else
         return NULL;
 }
