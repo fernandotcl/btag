@@ -55,11 +55,6 @@ TitleLocalizationHandler::word_hint EnglishTitleLocalizationHandler::word_hint_f
         }
     }
 
-    return simple_word_hint_for_word(word);
-}
-
-TitleLocalizationHandler::word_hint EnglishTitleLocalizationHandler::simple_word_hint_for_word(const std::wstring &word) const
-{
     // Lowercase some specific words (context insensitive)
     static const wchar_t *lowercase_words[] = {
         L"a", L"an", L"the",                                     // articles

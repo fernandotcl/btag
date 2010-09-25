@@ -16,9 +16,6 @@ class EnglishTitleLocalizationHandler : public TitleLocalizationHandler
 {
     public:
         word_hint word_hint_for_word(const std::wstring &word, size_t index, size_t count, wchar_t after_punctuation) const;
-
-    private:
-        word_hint simple_word_hint_for_word(const std::wstring &word) const;
 };
 
 #endif
