@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-project(qtagger)
+project(btag)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
@@ -13,7 +13,7 @@ find_package(Boost 1.42.0 COMPONENTS filesystem REQUIRED)
 find_package(PkgConfig)
 pkg_check_modules(TAGLIB REQUIRED taglib)
 
-set(QTAGGER_SOURCES
+set(BTAG_SOURCES
     src/BasicStringFilter.cpp
     src/EnglishTitleLocalizationHandler.cpp
     src/InteractiveTagger.cpp
@@ -25,7 +25,7 @@ set(QTAGGER_SOURCES
     src/TitleCapitalizationFilter.cpp
     src/TitleLocalizationHandler.cpp)
 
-set(QTAGGER_HEADERS
+set(BTAG_HEADERS
     src/BasicStringFilter.h
     src/CapitalizationFilter.h
     src/ConservativeRenamingFilter.h
@@ -42,17 +42,17 @@ set(QTAGGER_HEADERS
 
 include_directories(${Boost_INCLUDE_DIRS} ${TAGLIB_INCLUDE_DIRS})
 
-add_executable(qtagger ${QTAGGER_SOURCES} ${QTAGGER_HEADERS})
-target_link_libraries(qtagger ${Boost_LIBRARIES} ${TAGLIB_LIBRARIES})
+add_executable(btag ${BTAG_SOURCES} ${BTAG_HEADERS})
+target_link_libraries(btag ${Boost_LIBRARIES} ${TAGLIB_LIBRARIES})
 
 add_custom_target(dist
-    COMMAND nroff -t man man/qtagger.1.roff >man/qtagger.1
+    COMMAND nroff -t man man/btag.1.roff >man/btag.1
     COMMAND git describe --tags --abbrev=0 >version
-    COMMAND git archive --prefix=qtagger-`cat version`/ HEAD >qtagger-`cat version`.tar
-    COMMAND tar --transform s@^@qtagger-`cat version`/@ -rf qtagger-`cat version`.tar man/qtagger.1
-    COMMAND gzip qtagger-`cat version`.tar
-    COMMAND mv qtagger-`cat version`.tar.gz ${CMAKE_BINARY_DIR}
-    COMMAND rm -f version man/qtagger.1
+    COMMAND git archive --prefix=btag-`cat version`/ HEAD >btag-`cat version`.tar
+    COMMAND tar --transform s@^@btag-`cat version`/@ -rf btag-`cat version`.tar man/btag.1
+    COMMAND gzip btag-`cat version`.tar
+    COMMAND mv btag-`cat version`.tar.gz ${CMAKE_BINARY_DIR}
+    COMMAND rm -f version man/btag.1
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-install(TARGETS qtagger DESTINATION bin)
+install(TARGETS btag DESTINATION bin)

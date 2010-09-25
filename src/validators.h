@@ -1,5 +1,5 @@
 /*
- * This file is part of qtagger.
+ * This file is part of btag.
  *
  * © 2010 Fernando Tarlá Cardoso Lemos
  *

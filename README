@@ -1,10 +1,10 @@
 Introduction
 ============
 
-qtagger is a command line based multimedia tagger. It retains information
-about the filesystem structure so that users can tag a bunch of albums with
-ease. In some ways, qtagger can be compared to graphical taggers like
-EasyTAG[1] as both allow you to tag a lot of songs in batches.
+btag is a command line based multimedia tagger. It retains information about
+the filesystem structure so that users can tag a bunch of albums with ease. In
+some ways, btag can be compared to graphical taggers like EasyTAG[1] as both
+allow you to tag a lot of songs in batches.
 
 The following features are implemented:
 
@@ -22,12 +22,12 @@ References:
 Configuration
 =============
 
-All configuration is done through command line switches. Refer to qtagger(1)
-for more information on the supported switches.
+All configuration is done through command line switches. Refer to btag(1) for
+more information on the supported switches.
 
 
 Future goals
 ============
 
-qtagger is already usable as of now. It wouldn't hurt to bring more features
-from EasyTAG or to provide more control over specific tags.
+btag is already usable as of now. It wouldn't hurt to bring more features from
+EasyTAG or to provide more control over specific tags.

@@ -1,7 +1,7 @@
 Dependencies
 ============
 
-Those are the dependencies needed to compile qtagger:
+Those are the dependencies needed to compile btag:
 
 * TagLib (libtag1-dev in Debian)
 * Boost headers >= 1.42.0 (libboost-dev in Debian)

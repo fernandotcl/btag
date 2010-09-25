@@ -1,5 +1,5 @@
 /*
- * This file is part of qtagger.
+ * This file is part of btag.
  *
  * © 2010 Fernando Tarlá Cardoso Lemos
  *
@@ -30,13 +30,13 @@ static void print_usage(std::ostream &out)
 {
     out << "\
 Usage: \n\
-    qtagger [--dir-rename-format] [--file-rename-format format] \\\n\
-            [--filter filter] [--title-locale locale] \n\
-            [--renaming-filter filter] <path> [path2] [path3] ...\n\
-    qtagger [--dir-rename-format] [--file-rename-format format] \\\n\
-            [--input-filter filter] [--output-filter filter] \\\n\
-            [--title-locale locale] <path> [path2] [path3] ...\n\
-    qtagger --help\n\
+    btag [--dir-rename-format] [--file-rename-format format] \\\n\
+         [--filter filter] [--title-locale locale] \n\
+         [--renaming-filter filter] <path> [path2] [path3] ...\n\
+    btag [--dir-rename-format] [--file-rename-format format] \\\n\
+         [--input-filter filter] [--output-filter filter] \\\n\
+         [--title-locale locale] <path> [path2] [path3] ...\n\
+    btag --help\n\
 \n\
 Available input/output filters: basic, first-upper, lower, title, upper\n\
 \n\
@@ -45,10 +45,10 @@ Available renaming filters: conservative, unix\n\
 Available title locales: en (English), es (Spanish)\n\
 \n\
 Example:\n\
-    qtagger --file-rename-format '%track. %title' \\\n\
-        --dir-rename-format '%album (%year)' \\\n\
-        --filter title --title-locale en \\\n\
-        --renaming-filter unix /path/to/myalbum\n\
+    btag --file-rename-format '%track. %title' \\\n\
+         --dir-rename-format '%album (%year)' \\\n\
+         --filter title --title-locale en \\\n\
+         --renaming-filter unix /path/to/myalbum\n\
 " << std::endl;
 }
 
