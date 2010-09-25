@@ -15,12 +15,14 @@ pkg_check_modules(TAGLIB REQUIRED taglib)
 
 set(QTAGGER_SOURCES
     src/BasicStringFilter.cpp
+    src/EnglishTitleLocalizationHandler.cpp
     src/InteractiveTagger.cpp
     src/main.cpp
     src/RenamingFilter.cpp
     src/SimpleCapitalizationFilter.cpp
     src/StandardConsole.cpp
-    src/TitleCapitalizationFilter.cpp)
+    src/TitleCapitalizationFilter.cpp
+    src/TitleLocalizationHandler.cpp)
 
 set(QTAGGER_HEADERS
     src/BasicStringFilter.h

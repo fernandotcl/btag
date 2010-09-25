@@ -180,12 +180,12 @@ int main(int argc, char **argv)
     }
 
     // Add the title localization handler
-    if (title_localization_handler.get()) {
-        TitleCapitalizationFilter *filter = dynamic_cast<TitleCapitalizationFilter *>(input_filter.get());
-        if (filter) filter->set_localization_handler(title_localization_handler.get());
-        filter = dynamic_cast<TitleCapitalizationFilter *>(output_filter.get());
-        if (filter) filter->set_localization_handler(title_localization_handler.get());
-    }
+    if (!title_localization_handler.get())
+        title_localization_handler.reset(new EnglishTitleLocalizationHandler);
+    TitleCapitalizationFilter *filter = dynamic_cast<TitleCapitalizationFilter *>(input_filter.get());
+    if (filter) filter->set_localization_handler(title_localization_handler.get());
+    filter = dynamic_cast<TitleCapitalizationFilter *>(output_filter.get());
+    if (filter) filter->set_localization_handler(title_localization_handler.get());
 
     // Add the filters
     if (!input_filter.get())

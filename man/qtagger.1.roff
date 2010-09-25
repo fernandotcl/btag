@@ -54,10 +54,10 @@ The first character of each word is uppercased (with exceptions), while all othe
 .B upper
 All characters are uppercased
 .PP
-If a title locale is specified (option \fB-t\fR), the title capitalization will loosely follow locale-specific rules. Note that strict title capitalization rules often depend on the context in which the words are used, the precise analysis of which is much beyond the scope of qtagger. The currently supported title locale specifications are:
+The title capitalization algorithm will follow locale-specific context-insensitive rules depending on the value of the \fB-t\fR parameter. Note that strict title capitalization rules often depend on the context in which the words are used, the precise analysis of which is much beyond the scope of qtagger. The currently supported title locale specifications are:
 .TP 4
 .B en
-English
+English (default)
 .SH RENAMING FORMATS
 If a format is specified with the \fB-r\fR option, the tagged multimedia files are renamed accordingly. Likewise, if the \fB-d\fR option is used, the directory in which multimedia files were tagged is renamed according to the specified format.
 

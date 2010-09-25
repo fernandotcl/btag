@@ -22,7 +22,20 @@ class TitleCapitalizationFilter : public CapitalizationFilter
         std::wstring filter(const std::wstring &input) const;
 
     private:
-        std::wstring filtered_word(const std::wstring &word, size_t index) const;
+        enum element_type {
+            ELEMENT_TYPE_WORD,
+            ELEMENT_TYPE_PUNCTUATION_LEFT,
+            ELEMENT_TYPE_PUNCTUATION_RIGHT,
+            ELEMENT_TYPE_PUNCTUATION_HANGING
+        };
+
+        struct element {
+            element_type type;
+            std::wstring text;
+            element(element_type t, const std::wstring &x) : type(t), text(x) {}
+        };
+
+        bool is_punctuation(wchar_t c) const;
 
         TitleLocalizationHandler *m_handler;
 };
