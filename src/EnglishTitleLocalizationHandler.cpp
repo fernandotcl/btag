@@ -27,13 +27,13 @@ TitleLocalizationHandler::word_hint EnglishTitleLocalizationHandler::word_hint_f
     // Check for hyphens
     if (word.size() > 2 && word[0] != L'-' && word[word.size() - 1] != L'-') {
         boost::optional<std::vector<bool> > uppercase;
-        for (size_t i = 1; i < word.size(); ++i) {
+        for (size_t i = 1; i < word.size() - 1; ++i) {
             if (word[i] == L'-') {
                 if (!uppercase) {
                     uppercase = std::vector<bool>(word.size(), false);
                     (*uppercase)[0] = true;
                 }
-                (*uppercase)[i - 1] = true;
+                (*uppercase)[i + 1] = true;
             }
         }
         if (uppercase)
