@@ -1,41 +1,41 @@
 .TH BTAG 1
 .SH NAME
-btag - A command line based multimedia tagger
+btag \- A command line based multimedia tagger
 .SH SYNOPSIS
 .B btag
 [\fIoptions\fR] \fIpath1\fR [\fIpath2\fR] [\fIpath3\fR] ...
 .SH DESCRIPTION
 btag is a command line multimedia tagger. It uses the existent tags found in the supplied files as well as user input to determine new values for the tags. It can also optionally rename files and directories based on such tags.
 .TP 33
-.B -d\fR/\fB--dir-rename-format \fIformat
+.B \-d\fR/\fB\-\-dir\-rename\-format \fIformat
 Use \fIformat\fR to rename the directories where the multimedia files were found
 .TP
-.B -i\fR/\fB--input-filter \fIfilter
+.B \-i\fR/\fB\-\-input\-filter \fIfilter
 Use \fIfilter\fR as the input filter
 .TP
-.B -f\fR/\fB--filter \fIfilter
+.B \-f\fR/\fB\-\-filter \fIfilter
 Use \fIfilter\fR as both the input and the output filter
 .TP
-.B -h\fR/\fB--help
+.B \-h\fR/\fB\-\-help
 Display usage information and exit
 .TP
-.B -n\fR/\fB--renaming_filter \fIfilter
+.B \-n\fR/\fB\-\-renaming_filter \fIfilter
 Use \fIfilter\fR as the renaming filter
 .TP
-.B -o\fR/\fB--output-filter \fIfilter
+.B \-o\fR/\fB\-\-output\-filter \fIfilter
 Use \fIfilter\fR as the input filter
 .TP
-.B -r\fR/\fB--file-rename-format \fIformat
+.B \-r\fR/\fB\-\-file\-rename\-format \fIformat
 Use \fIformat\fR to rename the multimedia files
 .TP
-.B -t\fR/\fB--title-locale \fIlocale
-Use \fIlocale\fR for proper (although lax) locale-specific title casing
+.B \-t\fR/\fB\-\-title\-locale \fIlocale
+Use \fIlocale\fR for proper (although lax) locale\(hyspecific title casing
 .PP
 Multiple paths to multimedia files or directories containing multimedia files can be specified.
 .SH INPUT AND OUTPUT FILTERS
 btag supports input and output filters that are applied to the text fields (artist, album and song title). Those filters can protect against basic mistakes such as duplicate whitespace. Input filters are used on the tags as they are loaded from the multimedia files. This filtered information is used to provide suggestions to the user when the interactive tagger requests information for those text fields. If an output filter is configured, the user input is then filtered, and if the filtered text does not match the user input, the user is asked for confirmation.
 
-In most cases, the input filter should match the output filter (which is why the \fB-f\fR option is handy). You may choose to specify only an input filter, in which case the user input is not filtered. If you don't specify an input filter, though, the default input filter will be used.
+In most cases, the input filter should match the output filter (which is why the \fB\-f\fR option is handy). You may choose to specify only an input filter, in which case the user input is not filtered. If you don't specify an input filter, though, the default input filter will be used.
 
 The currently available filters are:
 .TP 14
@@ -54,7 +54,7 @@ The first character of each word is uppercased (with exceptions), while all othe
 .B upper
 All characters are uppercased
 .PP
-The title capitalization algorithm will follow locale-specific context-insensitive rules depending on the value of the \fB-t\fR parameter. Note that strict title capitalization rules often depend on the context in which the words are used, the precise analysis of which is much beyond the scope of btag. The currently supported title locale specifications are:
+The title capitalization algorithm will follow locale\(hyspecific context\(hyinsensitive rules depending on the value of the \fB\-t\fR parameter. Note that strict title capitalization rules often depend on the context in which the words are used, the precise analysis of which is much beyond the scope of btag. The currently supported title locale specifications are:
 .TP 4
 .B en
 English (default)
@@ -62,7 +62,7 @@ English (default)
 .B es
 Spanish
 .SH RENAMING FORMATS
-If a format is specified with the \fB-r\fR option, the tagged multimedia files are renamed accordingly. Likewise, if the \fB-d\fR option is used, the directory in which multimedia files were tagged is renamed according to the specified format.
+If a format is specified with the \fB\-r\fR option, the tagged multimedia files are renamed accordingly. Likewise, if the \fB\-d\fR option is used, the directory in which multimedia files were tagged is renamed according to the specified format.
 
 The specified format is converted to a file or directory name using the following substitutions:
 .TP 9
@@ -76,10 +76,10 @@ Album name
 Year of release
 .TP
 .B %track
-Track number (only replaced by the \fB-r\fR option)
+Track number (only replaced by the \fB\-r\fR option)
 .TP
 .B %title
-Song title (only replaced by the \fB-r\fR option)
+Song title (only replaced by the \fB\-r\fR option)
 .PP
 Renaming happens after the tags are written, and it's relative to btag's working directory.
 
@@ -95,17 +95,17 @@ Conservative character replacements are performed, recommended for FAT32 file sy
 .B unix
 Generates file and directory names that should be valid in an Unix environment (default)
 .SH EXAMPLES
-Using title casing with English rules and sensible renaming formats generating FAT32-safe file and directory names:
+Using title casing with English rules and sensible renaming formats generating FAT32\(hysafe file and directory names:
 
 .nf
-$ btag --file-rename-format '%track. %title' \\
-       --dir-rename-format '%album (%year)' \\
-       --filter title --title-locale en \\
-       --renaming-format conservative /path/to/myalbum
+$ btag \-\-file\-rename\-format '%track. %title' \\
+       \-\-dir\-rename\-format '%album (%year)' \\
+       \-\-filter title \-\-title\-locale en \\
+       \-\-renaming\-format conservative /path/to/myalbum
 .fi
 
 Using an input filter only:
 
 .nf
-$ btag --input-filter lower /path/to/myalbum
+$ btag \-\-input\-filter lower /path/to/myalbum
 .fi
