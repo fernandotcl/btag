@@ -45,14 +45,4 @@ include_directories(${Boost_INCLUDE_DIRS} ${TAGLIB_INCLUDE_DIRS})
 add_executable(btag ${BTAG_SOURCES} ${BTAG_HEADERS})
 target_link_libraries(btag ${Boost_LIBRARIES} ${TAGLIB_LIBRARIES})
 
-add_custom_target(dist
-    COMMAND nroff -t man man/btag.1.roff >man/btag.1
-    COMMAND git describe --tags --abbrev=0 >version
-    COMMAND git archive --prefix=btag-`cat version`/ HEAD >btag-`cat version`.tar
-    COMMAND tar --transform s@^@btag-`cat version`/@ -rf btag-`cat version`.tar man/btag.1
-    COMMAND gzip btag-`cat version`.tar
-    COMMAND mv btag-`cat version`.tar.gz ${CMAKE_BINARY_DIR}
-    COMMAND rm -f version man/btag.1
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
 install(TARGETS btag DESTINATION bin)
