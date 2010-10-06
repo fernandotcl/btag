@@ -26,6 +26,10 @@ namespace fs = boost::filesystem;
 InteractiveTagger::InteractiveTagger()
     : m_input_filter(NULL), m_output_filter(NULL)
 {
+    // Load the extensions supported by TagLib
+    TagLib::StringList extensions = TagLib::FileRef::defaultFileExtensions();
+    for (TagLib::StringList::ConstIterator it = extensions.begin(); it != extensions.end(); ++it)
+        m_supported_extensions.push_back(L'.' + it->toWString());
 }
 
 
@@ -119,13 +123,11 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
 
 bool InteractiveTagger::is_supported_extension(const fs::wpath &path)
 {
-    static const wchar_t *supported_extensions[] = { L".mp3", L".ogg", L".flac", L".mpc", NULL };
-
     std::wstring extension(path.extension());
     boost::to_lower(extension);
 
-    for (int i = 0; supported_extensions[i]; ++i) {
-        if (extension == supported_extensions[i])
+    BOOST_FOREACH(const std::wstring &supported_extension, m_supported_extensions) {
+        if (extension == supported_extension)
             return true;
     }
 

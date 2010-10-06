@@ -52,6 +52,8 @@ class InteractiveTagger
 
         std::list<TagLib::FileRef> m_unsaved_files;
         std::list<std::pair<boost::filesystem::wpath, boost::filesystem::wpath> > m_pending_renames;
+
+        std::list<std::wstring> m_supported_extensions;
 };
 
 #endif
