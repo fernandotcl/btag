@@ -2,10 +2,8 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(btag)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb -O0")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb -O0 -D_DEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb -O0")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 find_package(Boost 1.42.0 COMPONENTS filesystem REQUIRED)
