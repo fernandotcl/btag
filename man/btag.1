@@ -29,7 +29,7 @@ Use \fIfilter\fR as the input filter
 Use \fIformat\fR to rename the multimedia files
 .TP
 .B \-t\fR/\fB\-\-title\-locale \fIlocale
-Use \fIlocale\fR for proper (although lax) locale\(hyspecific title casing
+Use \fIlocale\fR for proper (although lax) locale\-specific title casing
 .PP
 Multiple paths to multimedia files or directories containing multimedia files can be specified.
 .SH INPUT AND OUTPUT FILTERS
@@ -54,7 +54,7 @@ The first character of each word is uppercased (with exceptions), while all othe
 .B upper
 All characters are uppercased
 .PP
-The title capitalization algorithm will follow locale\(hyspecific context\(hyinsensitive rules depending on the value of the \fB\-t\fR parameter. Note that strict title capitalization rules often depend on the context in which the words are used, the precise analysis of which is much beyond the scope of btag. The currently supported title locale specifications are:
+The title capitalization algorithm will follow locale\-specific context\-insensitive rules depending on the value of the \fB\-t\fR parameter. Note that strict title capitalization rules often depend on the context in which the words are used, the precise analysis of which is much beyond the scope of btag. The currently supported title locale specifications are:
 .TP 4
 .B en
 English (default)
@@ -95,7 +95,7 @@ Conservative character replacements are performed, recommended for FAT32 file sy
 .B unix
 Generates file and directory names that should be valid in an Unix environment (default)
 .SH EXAMPLES
-Using title casing with English rules and sensible renaming formats generating FAT32\(hysafe file and directory names:
+Using title casing with English rules and sensible renaming formats generating FAT32\-safe file and directory names:
 
 .nf
 $ btag \-\-file\-rename\-format '%track. %title' \\
