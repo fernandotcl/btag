@@ -31,3 +31,28 @@ Future goals
 
 btag is already usable as of now. It wouldn't hurt to bring more features from
 EasyTAG or to provide more control over specific tags.
+
+
+Contributing
+============
+
+Any help is appreciated, please feel free to contribute. I'll review your
+patches and commit them if they are in accordance with this project's goals,
+and you'll be credited for the changes (I may ask you to change a few things
+things before your patches are accepted, though).
+
+For the time being, send your patches to:
+
+Fernando Tarlá Cardoso Lemos <fernandotcl AT gmail.com>
+
+Please format your patches with "git format-patch" and then attach them to an
+e-mail instead of sending the patches inlined in the message. This makes it
+easier for me to apply them.
+
+
+Authors
+=======
+
+btag was created by:
+
+Fernando Tarlá Cardoso Lemos <fernandotcl AT gmail.com>.
