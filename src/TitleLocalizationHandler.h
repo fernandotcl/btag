@@ -28,7 +28,7 @@ class TitleLocalizationHandler
             word_style style;
             boost::optional<std::vector<bool> > uppercase;
             word_hint(word_style s) : style(s) {}
-            word_hint(const std::vector<bool> u) : style(WORD_STYLE_CUSTOM), uppercase(u) {}
+            word_hint(const std::vector<bool> &u) : style(WORD_STYLE_CUSTOM), uppercase(u) {}
         };
 
         virtual word_hint word_hint_for_word(const std::wstring &word, size_t index, size_t count, wchar_t after_punctuation) const = 0;
