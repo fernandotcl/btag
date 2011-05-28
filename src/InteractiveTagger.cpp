@@ -24,7 +24,7 @@
 namespace fs = boost::filesystem;
 
 InteractiveTagger::InteractiveTagger()
-    : m_input_filter(NULL), m_output_filter(NULL)
+    : m_input_filter(NULL), m_output_filter(NULL), m_dry_run(false)
 {
     // Load the extensions supported by TagLib
     TagLib::StringList extensions = TagLib::FileRef::defaultFileExtensions();
@@ -100,24 +100,33 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
     }
 
     // Save the unsaved files
-    if (!m_unsaved_files.empty() && m_terminal->ask_yes_no_question(L"=== OK to save the changes to the files?")) {
+    if (!m_unsaved_files.empty()
+            && (m_dry_run || m_terminal->ask_yes_no_question(L"=== OK to save the changes to the files?"))) {
+        if (m_dry_run)
+            m_terminal->display_info_message("=== Not saving changes (dry run mode)");
         BOOST_FOREACH(TagLib::FileRef &f, m_unsaved_files) {
-            m_terminal->display_info_message("Saving \"" + std::string(f.file()->name()) + "\"");
-            if (!f.save())
+            std::string message(m_dry_run ? "Not saving " : "Saving");
+            message += " \"" + std::string(f.file()->name()) + '\"';
+            m_terminal->display_info_message(message);
+            if (!m_dry_run && !f.save())
                 m_terminal->display_warning_message("Unable to save " + std::string(f.file()->name()) + "\"");
         }
     }
 
     // Perform the pending renames
-    if (!m_pending_renames.empty() && m_terminal->ask_yes_no_question(L"=== OK to rename the files?")) {
+    if (!m_pending_renames.empty()
+            && (m_dry_run || m_terminal->ask_yes_no_question(L"=== OK to rename the files?"))) {
+        m_terminal->display_info_message("=== Not renaming files (dry run mode)");
         std::list<std::pair<fs::path, fs::path> >::const_iterator it;
         for (it = m_pending_renames.begin(); it != m_pending_renames.end(); ++it) {
             const fs::path &from((*it).first);
             const fs::path &to((*it).second);
             m_terminal->display_info_message(from.string());
             m_terminal->display_info_message(L"-> " + to.string<std::wstring>());
-            try { fs::rename(from, to); }
-            catch (std::exception &e) { m_terminal->display_warning_message(e.what()); }
+            if (!m_dry_run) {
+                try { fs::rename(from, to); }
+                catch (std::exception &e) { m_terminal->display_warning_message(e.what()); }
+            }
         }
     }
 
@@ -137,7 +146,8 @@ bool InteractiveTagger::is_supported_extension(const fs::path &path)
     return false;
 }
 
-std::wstring InteractiveTagger::replace_tokens(const std::wstring &str, const std::map<std::wstring, std::wstring> &replacements)
+std::wstring InteractiveTagger::replace_tokens(const std::wstring &str,
+        const std::map<std::wstring, std::wstring> &replacements)
 {
     std::wstring res;
     res.reserve(str.size() * 3);
@@ -253,7 +263,8 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
         tokens[L"track"] = track_str;
         tokens[L"title"] = m_renaming_filter->filter(new_title);
         fs::path new_path = path.parent_path();
-        new_path /= replace_tokens(*m_file_rename_format, tokens) + boost::to_lower_copy(path.extension().string<std::wstring>());
+        new_path /= replace_tokens(*m_file_rename_format, tokens)
+            + boost::to_lower_copy(path.extension().string<std::wstring>());
         if (new_path != path)
             m_pending_renames.push_back(std::pair<fs::path, fs::path>(path, new_path));
     }

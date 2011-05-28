@@ -7,6 +7,9 @@ btag \- A command line based multimedia tagger
 .SH DESCRIPTION
 btag is a command line multimedia tagger. It uses the existent tags found in the supplied files as well as user input to determine new values for the tags. It can also optionally rename files and directories based on such tags.
 .TP 33
+.B \-D\fR/\fB\-\-dry\-run
+Don't do anything, just show what would have been done (dry run mode)
+.TP
 .B \-d\fR/\fB\-\-dir\-rename\-format \fIformat
 Use \fIformat\fR to rename the directories where the multimedia files were found
 .TP
@@ -19,7 +22,7 @@ Use \fIfilter\fR as both the input and the output filter
 .B \-h\fR/\fB\-\-help
 Display usage information and exit
 .TP
-.B \-n\fR/\fB\-\-renaming_filter \fIfilter
+.B \-n\fR/\fB\-\-renaming\-filter \fIfilter
 Use \fIfilter\fR as the renaming filter
 .TP
 .B \-o\fR/\fB\-\-output\-filter \fIfilter

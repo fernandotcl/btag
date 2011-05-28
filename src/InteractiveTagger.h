@@ -36,6 +36,8 @@ class InteractiveTagger
         void set_output_filter(BasicStringFilter *filter) { m_output_filter = filter; }
         void set_renaming_filter(RenamingFilter *filter) { m_renaming_filter = filter; }
 
+        void set_dry_run(bool dry_run = true) { m_dry_run = dry_run; }
+
         void tag(int num_paths, const char **paths);
 
     private:
@@ -51,6 +53,7 @@ class InteractiveTagger
         RenamingFilter *m_renaming_filter;
         InteractiveTerminal *m_terminal;
         boost::optional<std::wstring> m_file_rename_format, m_dir_rename_format;
+        bool m_dry_run;
 
         std::list<TagLib::FileRef> m_unsaved_files;
         std::list<std::pair<boost::filesystem::path, boost::filesystem::path> > m_pending_renames;

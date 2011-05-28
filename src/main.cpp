@@ -30,25 +30,8 @@ static void print_usage(std::ostream &out)
 {
     out << "\
 Usage: \n\
-    btag [--dir-rename-format] [--file-rename-format format] \\\n\
-         [--filter filter] [--title-locale locale] \n\
-         [--renaming-filter filter] <path> [path2] [path3] ...\n\
-    btag [--dir-rename-format] [--file-rename-format format] \\\n\
-         [--input-filter filter] [--output-filter filter] \\\n\
-         [--title-locale locale] <path> [path2] [path3] ...\n\
-    btag --help\n\
-\n\
-Available input/output filters: basic, first-upper, lower, title, upper\n\
-\n\
-Available renaming filters: conservative, unix\n\
-\n\
-Available title locales: en (English), es (Spanish)\n\
-\n\
-Example:\n\
-    btag --file-rename-format '%track. %title' \\\n\
-         --dir-rename-format '%album (%year)' \\\n\
-         --filter title --title-locale en \\\n\
-         --renaming-filter unix /path/to/myalbum\n\
+    btag [options] path1 [path2] [path3] ...\n\
+    btag --help\
 " << std::endl;
 }
 
@@ -105,6 +88,7 @@ int main(int argc, char **argv)
 
     struct option long_options[] = {
         {"dir-rename-format", required_argument, NULL, 'd'},
+        {"dry-run", no_argument, NULL, 'D'},
         {"input-filter", required_argument, NULL, 'i'},
         {"file-rename-format", required_argument, NULL, 'r'},
         {"filter", required_argument, NULL, 'f'},
@@ -123,8 +107,11 @@ int main(int argc, char **argv)
 
     // Parse the command line options
     int opt;
-    while ((opt = getopt_long(argc, argv, "d:i:f:o:hn:r:t:", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "Dd:i:f:o:hn:r:t:", long_options, NULL)) != -1) {
         switch (opt) {
+            case 'D':
+                itag.set_dry_run();
+                break;
             case 'd':
                 itag.set_dir_rename_format(optarg);
                 break;
