@@ -13,6 +13,7 @@ pkg_check_modules(TAGLIB REQUIRED taglib)
 
 set(BTAG_SOURCES
     src/BasicStringFilter.cpp
+    src/ConfirmationHandler.cpp
     src/EnglishTitleLocalizationHandler.cpp
     src/InteractiveTagger.cpp
     src/main.cpp
@@ -26,6 +27,7 @@ set(BTAG_SOURCES
 set(BTAG_HEADERS
     src/BasicStringFilter.h
     src/CapitalizationFilter.h
+    src/ConfirmationHandler.h
     src/ConservativeRenamingFilter.h
     src/EnglishTitleLocalizationHandler.h
     src/InteractiveTagger.h

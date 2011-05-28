@@ -19,6 +19,7 @@
 #include <utility>
 
 #include "BasicStringFilter.h"
+#include "ConfirmationHandler.h"
 #include "InteractiveTerminal.h"
 #include "RenamingFilter.h"
 
@@ -41,8 +42,9 @@ class InteractiveTagger
         bool is_supported_extension(const boost::filesystem::path &path);
         std::wstring replace_tokens(const std::wstring &str, const std::map<std::wstring, std::wstring> &replacements);
 
-        void tag_file(const boost::filesystem::path &path, std::wstring *artist = NULL,
-                std::wstring *album = NULL, int *year = NULL, int track = -1);
+        void tag_file(const boost::filesystem::path &path, ConfirmationHandler &artist_confirmation,
+                ConfirmationHandler &album_confirmation, int *year, int track);
+        void tag_file(const boost::filesystem::path &path);
         void tag_directory(const boost::filesystem::path &path);
 
         BasicStringFilter *m_input_filter, *m_output_filter;

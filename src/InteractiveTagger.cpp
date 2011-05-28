@@ -1,7 +1,7 @@
 /*
  * This file is part of btag.
  *
- * © 2010 Fernando Tarlá Cardoso Lemos
+ * © 2010-2011 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
@@ -177,7 +177,8 @@ std::wstring InteractiveTagger::replace_tokens(const std::wstring &str, const st
     return res;
 }
 
-void InteractiveTagger::tag_file(const fs::path &path, std::wstring *artist, std::wstring *album, int *year, int track)
+void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &artist_confirmation,
+       ConfirmationHandler &album_confirmation, int *year, int track)
 {
     m_terminal->display_info_message(L"=== Tagging \"" + path.filename().string<std::wstring>() + L"\"");
 
@@ -185,36 +186,22 @@ void InteractiveTagger::tag_file(const fs::path &path, std::wstring *artist, std
     TagLib::FileRef f(path.c_str());
 
     // Ask for the artist
-    boost::optional<std::wstring> default_artist;
-    if (artist && !artist->empty())
-        default_artist = *artist;
-    else if (!f.tag()->artist().isNull())
-        default_artist = m_input_filter->filter(f.tag()->artist().toWString());
-    std::wstring new_artist = m_terminal->ask_string_question(L"Artist:", default_artist);
-    if (m_output_filter) {
-        std::wstring filtered_artist = m_output_filter->filter(new_artist);
-        if (m_input_filter->requires_confirmation_as_output_filter() && filtered_artist != new_artist)
-            filtered_artist = m_terminal->ask_string_question(L"Artist (confirmation):", filtered_artist);
-        new_artist = filtered_artist;
-    }
-    f.tag()->setArtist(new_artist);
-    if (artist) *artist = new_artist;
+    artist_confirmation.reset();
+    if (!f.tag()->artist().isNull())
+        artist_confirmation.set_local_default(m_input_filter->filter(f.tag()->artist().toWString()));
+    artist_confirmation.ask(L"Artist:");
+    while (!artist_confirmation.complies())
+        artist_confirmation.ask(L"Artist (confirmation):");
+    f.tag()->setArtist(artist_confirmation.answer());
 
     // Ask for the album
-    boost::optional<std::wstring> default_album;
-    if (album && !album->empty())
-        default_album = *album;
-    else if (!f.tag()->album().isNull())
-        default_album = m_input_filter->filter(f.tag()->album().toWString());
-    std::wstring new_album = m_terminal->ask_string_question(L"Album:", default_album);
-    if (m_output_filter) {
-        std::wstring filtered_album = m_output_filter->filter(new_album);
-        if (m_input_filter->requires_confirmation_as_output_filter() && filtered_album != new_album)
-            filtered_album = m_terminal->ask_string_question(L"Album (confirmation):", filtered_album);
-        new_album = filtered_album;
-    }
-    f.tag()->setAlbum(new_album);
-    if (album) *album = new_album;
+    album_confirmation.reset();
+    if (!f.tag()->album().isNull())
+        album_confirmation.set_local_default(m_input_filter->filter(f.tag()->album().toWString()));
+    album_confirmation.ask(L"Album:");
+    while (!album_confirmation.complies())
+        album_confirmation.ask(L"Album (confirmation):");
+    f.tag()->setAlbum(album_confirmation.answer());
 
     // Ask for the year
     boost::optional<int> default_year;
@@ -258,8 +245,8 @@ void InteractiveTagger::tag_file(const fs::path &path, std::wstring *artist, std
     // Add it to the list of pending renames based on the supplied format
     if (m_file_rename_format) {
         std::map<std::wstring, std::wstring> tokens;
-        tokens[L"artist"] = m_renaming_filter->filter(new_artist);
-        tokens[L"album"] = m_renaming_filter->filter(new_album);
+        tokens[L"artist"] = m_renaming_filter->filter(artist_confirmation.answer());
+        tokens[L"album"] = m_renaming_filter->filter(album_confirmation.answer());
         tokens[L"year"] = boost::lexical_cast<std::wstring>(new_year);
         std::wstring track_str(boost::lexical_cast<std::wstring>(new_track));
         if (track_str.size() == 1) track_str = L"0" + track_str;
@@ -270,6 +257,13 @@ void InteractiveTagger::tag_file(const fs::path &path, std::wstring *artist, std
         if (new_path != path)
             m_pending_renames.push_back(std::pair<fs::path, fs::path>(path, new_path));
     }
+}
+
+void InteractiveTagger::tag_file(const boost::filesystem::path &path)
+{
+    // Tag a file without recording the global default
+    ConfirmationHandler amnesiac(*m_terminal, m_input_filter, m_output_filter);
+    tag_file(path, amnesiac, amnesiac, NULL, -1);
 }
 
 void InteractiveTagger::tag_directory(const fs::path &path)
@@ -314,12 +308,13 @@ void InteractiveTagger::tag_directory(const fs::path &path)
     dir_list.sort();
 
     // Tag all individual files
-    std::wstring artist, album;
+    ConfirmationHandler artist(*m_terminal, m_input_filter, m_output_filter);
+    ConfirmationHandler album(*m_terminal, m_input_filter, m_output_filter);
     int year = -1;
     if (!file_list.empty()) {
         int track = 1;
         BOOST_FOREACH(const fs::path &p, file_list)
-            tag_file(p, &artist, &album, &year, track++);
+            tag_file(p, artist, album, &year, track++);
     }
 
     // We'll ask confirmation to descend into the subdirectories only if there are files
@@ -330,10 +325,10 @@ void InteractiveTagger::tag_directory(const fs::path &path)
     }
 
     // Add it to the list of pending renames based on the supplied format
-    if (!artist.empty() && m_dir_rename_format) {
+    if (artist.answer().empty() && m_dir_rename_format) {
         std::map<std::wstring, std::wstring> tokens;
-        tokens[L"artist"] = m_renaming_filter->filter(artist);
-        tokens[L"album"] = m_renaming_filter->filter(album);
+        tokens[L"artist"] = m_renaming_filter->filter(artist.answer());
+        tokens[L"album"] = m_renaming_filter->filter(album.answer());
         tokens[L"year"] = boost::lexical_cast<std::wstring>(year);
         fs::path new_path = path.parent_path();
         new_path /= replace_tokens(*m_dir_rename_format, tokens);
