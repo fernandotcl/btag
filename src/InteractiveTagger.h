@@ -38,12 +38,12 @@ class InteractiveTagger
         void tag(int num_paths, const char **paths);
 
     private:
-        bool is_supported_extension(const boost::filesystem::wpath &path);
+        bool is_supported_extension(const boost::filesystem::path &path);
         std::wstring replace_tokens(const std::wstring &str, const std::map<std::wstring, std::wstring> &replacements);
 
-        void tag_file(const boost::filesystem::wpath &path, std::wstring *artist = NULL,
+        void tag_file(const boost::filesystem::path &path, std::wstring *artist = NULL,
                 std::wstring *album = NULL, int *year = NULL, int track = -1);
-        void tag_directory(const boost::filesystem::wpath &path);
+        void tag_directory(const boost::filesystem::path &path);
 
         BasicStringFilter *m_input_filter, *m_output_filter;
         RenamingFilter *m_renaming_filter;
@@ -51,7 +51,7 @@ class InteractiveTagger
         boost::optional<std::wstring> m_file_rename_format, m_dir_rename_format;
 
         std::list<TagLib::FileRef> m_unsaved_files;
-        std::list<std::pair<boost::filesystem::wpath, boost::filesystem::wpath> > m_pending_renames;
+        std::list<std::pair<boost::filesystem::path, boost::filesystem::path> > m_pending_renames;
 
         std::list<std::wstring> m_supported_extensions;
 };

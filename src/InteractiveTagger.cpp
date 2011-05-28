@@ -48,7 +48,7 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
     assert(m_terminal);
 
     // Build a list with the normalized paths
-    std::list<fs::wpath> path_list;
+    std::list<fs::path> path_list;
     for (int i = 0; i < num_paths; ++i) {
         char *real_path = realpath(paths[i], NULL);
         if (!real_path) {
@@ -58,16 +58,17 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
             m_terminal->display_warning_message(errstr);
             continue;
         }
-        path_list.push_back(fs::wpath(boost::lexical_cast<std::wstring>(std::string(real_path))));
+        path_list.push_back(fs::path(boost::lexical_cast<std::wstring>(std::string(real_path))));
         free(real_path);
     }
 
     // Sort it and tag the paths
     path_list.sort();
-    BOOST_FOREACH(const fs::wpath &path, path_list) {
+    BOOST_FOREACH(const fs::path &path, path_list) {
         // Check if the path exists
         if (!fs::exists(path)) {
-            m_terminal->display_warning_message(L"Path \"" + path.string() + L"\" not found, skipping...");
+            m_terminal->display_warning_message(L"Path \"" + path.string<std::wstring>()
+                    + L"\" not found, skipping...");
             continue;
         }
 
@@ -75,7 +76,8 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
             // If it's a regular file, just tag it
             if (fs::is_regular_file(path)) {
                 if (!is_supported_extension(path)) {
-                    m_terminal->display_warning_message(L"Path \"" + path.string() + L"\" has no supported extension, skipping...");
+                    m_terminal->display_warning_message(L"Path \"" + path.string<std::wstring>()
+                            + L"\" has no supported extension, skipping...");
                     continue;
                 }
                 tag_file(path);
@@ -88,7 +90,8 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
 
             // It's none of the above, do something about it
             else {
-                m_terminal->display_warning_message(L"Path \"" + path.string() + L"\" is not a regular file or directory, skipping...");
+                m_terminal->display_warning_message(L"Path \"" + path.string<std::wstring>()
+                        + L"\" is not a regular file or directory, skipping...");
             }
         }
         catch (std::exception &e) {
@@ -107,12 +110,12 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
 
     // Perform the pending renames
     if (!m_pending_renames.empty() && m_terminal->ask_yes_no_question(L"=== OK to rename the files?")) {
-        std::list<std::pair<fs::wpath, fs::wpath> >::const_iterator it;
+        std::list<std::pair<fs::path, fs::path> >::const_iterator it;
         for (it = m_pending_renames.begin(); it != m_pending_renames.end(); ++it) {
-            const fs::wpath &from((*it).first);
-            const fs::wpath &to((*it).second);
+            const fs::path &from((*it).first);
+            const fs::path &to((*it).second);
             m_terminal->display_info_message(from.string());
-            m_terminal->display_info_message(L"-> " + to.string());
+            m_terminal->display_info_message(L"-> " + to.string<std::wstring>());
             try { fs::rename(from, to); }
             catch (std::exception &e) { m_terminal->display_warning_message(e.what()); }
         }
@@ -121,9 +124,9 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
     m_terminal->display_info_message("=== All done!");
 }
 
-bool InteractiveTagger::is_supported_extension(const fs::wpath &path)
+bool InteractiveTagger::is_supported_extension(const fs::path &path)
 {
-    std::wstring extension(path.extension());
+    std::wstring extension(path.extension().string<std::wstring>());
     boost::to_lower(extension);
 
     BOOST_FOREACH(const std::wstring &supported_extension, m_supported_extensions) {
@@ -174,12 +177,12 @@ std::wstring InteractiveTagger::replace_tokens(const std::wstring &str, const st
     return res;
 }
 
-void InteractiveTagger::tag_file(const fs::wpath &path, std::wstring *artist, std::wstring *album, int *year, int track)
+void InteractiveTagger::tag_file(const fs::path &path, std::wstring *artist, std::wstring *album, int *year, int track)
 {
-    m_terminal->display_info_message(L"=== Tagging \"" + path.filename() + L"\"");
+    m_terminal->display_info_message(L"=== Tagging \"" + path.filename().string<std::wstring>() + L"\"");
 
     // Get a reference to the file
-    TagLib::FileRef f(path.external_file_string().c_str());
+    TagLib::FileRef f(path.c_str());
 
     // Ask for the artist
     boost::optional<std::wstring> default_artist;
@@ -262,42 +265,47 @@ void InteractiveTagger::tag_file(const fs::wpath &path, std::wstring *artist, st
         if (track_str.size() == 1) track_str = L"0" + track_str;
         tokens[L"track"] = track_str;
         tokens[L"title"] = m_renaming_filter->filter(new_title);
-        fs::wpath new_path = path.parent_path();
-        new_path /= replace_tokens(*m_file_rename_format, tokens) + boost::to_lower_copy(path.extension());
+        fs::path new_path = path.parent_path();
+        new_path /= replace_tokens(*m_file_rename_format, tokens) + boost::to_lower_copy(path.extension().string<std::wstring>());
         if (new_path != path)
-            m_pending_renames.push_back(std::pair<fs::wpath, fs::wpath>(path, new_path));
+            m_pending_renames.push_back(std::pair<fs::path, fs::path>(path, new_path));
     }
 }
 
-void InteractiveTagger::tag_directory(const fs::wpath &path)
+void InteractiveTagger::tag_directory(const fs::path &path)
 {
-    m_terminal->display_info_message(L"=== Entering \"" + path.string() + L"\"");
+    m_terminal->display_info_message(L"=== Entering \"" + path.string<std::wstring>() + L"\"");
 
     // Create lists of files and subdirectories
-    std::list<fs::wpath> file_list, dir_list;
-    fs::wdirectory_iterator end_it;
-    for (fs::wdirectory_iterator it(path); it != end_it; ++it) {
+    std::list<fs::path> file_list, dir_list;
+    fs::directory_iterator end_it;
+    for (fs::directory_iterator it(path); it != end_it; ++it) {
         // Normalize the path (needed here so that we follow symlinks)
-        char *real_path = realpath(it->path().external_directory_string().c_str(), NULL);
+        char *real_path = realpath(it->path().c_str(), NULL);
         if (!real_path) {
-            m_terminal->display_warning_message(L"\"" + it->filename() + L"\" is not a valid path, skipping...");
+            m_terminal->display_warning_message(L"\"" + it->path().filename().string<std::wstring>()
+                    + L"\" is not a valid path, skipping...");
             continue;
         }
-        fs::wpath boost_path(boost::lexical_cast<std::wstring>(real_path));
+        fs::path boost_path(boost::lexical_cast<std::wstring>(real_path));
         free(real_path);
 
         // Add to the right list
         if (fs::is_regular_file(boost_path)) {
-            if (is_supported_extension(boost_path))
+            if (is_supported_extension(boost_path)) {
                 file_list.push_back(boost_path);
-            else
-                m_terminal->display_warning_message(L"\"" + it->filename() + L"\" has no supported extension, skipping...");
+            }
+            else {
+                m_terminal->display_warning_message(L"\"" + it->path().filename().string<std::wstring>()
+                        + L"\" has no supported extension, skipping...");
+            }
         }
         else if (fs::is_directory(boost_path)) {
             dir_list.push_back(boost_path);
         }
         else {
-            m_terminal->display_warning_message(L"\"" + boost_path.filename() + L"\" is not a regular file or directory, skipping...");
+            m_terminal->display_warning_message(L"\"" + boost_path.filename().string<std::wstring>()
+                    + L"\" is not a regular file or directory, skipping...");
         }
     }
 
@@ -310,12 +318,12 @@ void InteractiveTagger::tag_directory(const fs::wpath &path)
     int year = -1;
     if (!file_list.empty()) {
         int track = 1;
-        BOOST_FOREACH(const fs::wpath &p, file_list)
+        BOOST_FOREACH(const fs::path &p, file_list)
             tag_file(p, &artist, &album, &year, track++);
     }
 
     // We'll ask confirmation to descend into the subdirectories only if there are files
-    BOOST_FOREACH(const fs::wpath &p, dir_list) {
+    BOOST_FOREACH(const fs::path &p, dir_list) {
         if (file_list.empty() || m_terminal->ask_yes_no_question(L"Descend into subdirectory \""
                     + boost::lexical_cast<std::wstring>(p.filename()) + L"\"?", false))
             tag_directory(p);
@@ -327,9 +335,9 @@ void InteractiveTagger::tag_directory(const fs::wpath &path)
         tokens[L"artist"] = m_renaming_filter->filter(artist);
         tokens[L"album"] = m_renaming_filter->filter(album);
         tokens[L"year"] = boost::lexical_cast<std::wstring>(year);
-        fs::wpath new_path = path.parent_path();
+        fs::path new_path = path.parent_path();
         new_path /= replace_tokens(*m_dir_rename_format, tokens);
         if (new_path != path)
-            m_pending_renames.push_back(std::pair<fs::wpath, fs::wpath>(path, new_path));
+            m_pending_renames.push_back(std::pair<fs::path, fs::path>(path, new_path));
     }
 }
