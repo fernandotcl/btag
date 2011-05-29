@@ -105,7 +105,7 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
         if (m_dry_run)
             m_terminal->display_info_message("=== Not saving changes (dry run mode)");
         BOOST_FOREACH(TagLib::FileRef &f, m_unsaved_files) {
-            std::string message(m_dry_run ? "Not saving " : "Saving");
+            std::string message(m_dry_run ? "Not saving" : "Saving");
             message += " \"" + std::string(f.file()->name()) + '\"';
             m_terminal->display_info_message(message);
             if (!m_dry_run && !f.save())
@@ -336,7 +336,7 @@ void InteractiveTagger::tag_directory(const fs::path &path)
     }
 
     // Add it to the list of pending renames based on the supplied format
-    if (artist.answer().empty() && m_dir_rename_format) {
+    if (!artist.answer().empty() && m_dir_rename_format) {
         std::map<std::wstring, std::wstring> tokens;
         tokens[L"artist"] = m_renaming_filter->filter(artist.answer());
         tokens[L"album"] = m_renaming_filter->filter(album.answer());
