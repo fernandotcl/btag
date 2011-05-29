@@ -1,0 +1,18 @@
+1.1.0
+=====
+
+* New dry run mode.
+* Better confirmation algorithm.
+* Use the new boost::filesystem API.
+* Fix building with ld --no-add-needed.
+
+1.0.1
+=====
+
+* Bugfix release.
+* New license.
+
+1.0.0
+=====
+
+* Initial release.
