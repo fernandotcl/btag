@@ -1,11 +1,14 @@
-.TH BTAG 1
+.TH BTAG 1 2011-06-04 "btag" "btag Manual"
 .SH NAME
 btag \- A command line based multimedia tagger
 .SH SYNOPSIS
 .B btag
 [\fIoptions\fR] \fIpath1\fR [\fIpath2\fR] [\fIpath3\fR] ...
 .SH DESCRIPTION
-btag is a command line multimedia tagger. It uses the existent tags found in the supplied files as well as user input to determine new values for the tags. It can also optionally rename files and directories based on such tags.
+btag is a TagLib-based command line multimedia tag editor that attempts to automate the process of tagging a lot of files at once. It uses the tags found in the supplied files as well as interactive user input to determine new values for the tags. It can also optionally rename files and directories based on those new values.
+
+You can supply paths to files or directories to btag. Directories are recursively traversed and all files found are tagged. Directories are also handled differently in the sense that btag will attempt to keep information about the previously tagged files to provide sane defaults for all other files in the same parent directory. Only files with file extensions supported by TagLib are considered.
+.SH OPTIONS
 .TP 33
 .B \-D\fR/\fB\-\-dry\-run
 Don't do anything, just show what would have been done (dry run mode)
@@ -33,8 +36,6 @@ Use \fIformat\fR to rename the multimedia files
 .TP
 .B \-t\fR/\fB\-\-title\-locale \fIlocale
 Use \fIlocale\fR for proper (although lax) locale\-specific title casing
-.PP
-Multiple paths to multimedia files or directories containing multimedia files can be specified.
 .SH INPUT AND OUTPUT FILTERS
 btag supports input and output filters that are applied to the text fields (artist, album and song title). Those filters can protect against basic mistakes such as duplicate whitespace. Input filters are used on the tags as they are loaded from the multimedia files. This filtered information is used to provide suggestions to the user when the interactive tagger requests information for those text fields. If an output filter is configured, the user input is then filtered, and if the filtered text does not match the user input, the user is asked for confirmation.
 
@@ -97,7 +98,7 @@ Conservative character replacements are performed, recommended for FAT32 file sy
 .TP
 .B unix
 Generates file and directory names that should be valid in an Unix environment (default)
-.SH EXAMPLES
+.SH EXAMPLE
 Using title casing with English rules and sensible renaming formats generating FAT32\-safe file and directory names:
 
 .nf
