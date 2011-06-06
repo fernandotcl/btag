@@ -116,7 +116,8 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
     // Perform the pending renames
     if (!m_pending_renames.empty()
             && (m_dry_run || m_terminal->ask_yes_no_question(L"=== OK to rename the files?"))) {
-        m_terminal->display_info_message("=== Not renaming files (dry run mode)");
+        if (m_dry_run)
+            m_terminal->display_info_message("=== Not renaming files (dry run mode)");
         std::list<std::pair<fs::path, fs::path> >::const_iterator it;
         for (it = m_pending_renames.begin(); it != m_pending_renames.end(); ++it) {
             const fs::path &from((*it).first);
