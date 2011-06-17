@@ -61,7 +61,7 @@ TitleLocalizationHandler::word_hint EnglishTitleLocalizationHandler::word_hint_f
         L"and", L"but", L"for", L"nor", L"or", L"so", L"yet",    // coordinated conjunctions
         L"as", L"at", L"by", L"for", L"in", L"of", L"on", L"to", // short prepositions
         L"'n'", L"o'",                                           // contractions
-        L"vs.", L"etc.", NULL                                    // some exceptions
+        L"is", L"vs.", L"etc.", NULL                             // some exceptions
     };
     for (int i = 0; lowercase_words[i]; ++i) {
         if (word == lowercase_words[i])
