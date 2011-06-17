@@ -6,7 +6,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb -O0")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
-find_package(Boost 1.42.0 COMPONENTS filesystem system REQUIRED)
+find_package(Boost 1.46.0 COMPONENTS filesystem system REQUIRED)
 
 find_package(PkgConfig)
 pkg_check_modules(TAGLIB REQUIRED taglib)
