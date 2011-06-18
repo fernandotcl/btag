@@ -234,17 +234,14 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
     f.tag()->setTrack(new_track);
 
     // Ask for the song title
-    boost::optional<std::wstring> default_title;
+    ConfirmationHandler title_confirmation(*m_terminal, m_input_filter, m_output_filter);
+    title_confirmation.reset();
     if (!f.tag()->title().isNull())
-        default_title = m_input_filter->filter(f.tag()->title().toWString());
-    std::wstring new_title = m_terminal->ask_string_question(L"Title:", default_title);
-    if (m_output_filter) {
-        std::wstring filtered_title = m_output_filter->filter(new_title);
-        if (m_input_filter->requires_confirmation_as_output_filter() && filtered_title != new_title)
-            filtered_title = m_terminal->ask_string_question(L"Title (confirmation):", filtered_title);
-        new_title = filtered_title;
-    }
-    f.tag()->setTitle(new_title);
+        title_confirmation.set_local_default(m_input_filter->filter(f.tag()->title().toWString()));
+    title_confirmation.ask(L"Title:");
+    while (!title_confirmation.complies())
+        title_confirmation.ask(L"Title (confirmation):");
+    f.tag()->setTitle(title_confirmation.answer());
 
     // Reset the comment and genre fields
     f.tag()->setComment(TagLib::String::null);
@@ -262,7 +259,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
         std::wstring track_str(boost::lexical_cast<std::wstring>(new_track));
         if (track_str.size() == 1) track_str = L"0" + track_str;
         tokens[L"track"] = track_str;
-        tokens[L"title"] = m_renaming_filter->filter(new_title);
+        tokens[L"title"] = m_renaming_filter->filter(title_confirmation.answer());
         fs::path new_path = path.parent_path();
         new_path /= replace_tokens(*m_file_rename_format, tokens)
             + boost::to_lower_copy(path.extension().string<std::wstring>());
