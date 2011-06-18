@@ -53,8 +53,10 @@ bool ConfirmationHandler::do_ask(const std::wstring &question)
     // Check if the output filter rejects it
     if (m_output_filter) {
         std::wstring filtered = m_output_filter->filter(answer);
-        if (m_output_filter->requires_confirmation_as_output_filter() && answer != filtered)
+        if (m_output_filter->requires_confirmation_as_output_filter() && answer != filtered) {
+            m_local_def = filtered;
             return (m_complies = false);
+        }
     }
 
     // Nope, so it's good
