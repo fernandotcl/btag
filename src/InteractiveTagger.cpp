@@ -271,8 +271,9 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
 void InteractiveTagger::tag_file(const boost::filesystem::path &path)
 {
     // Tag a file without recording the global default
-    ConfirmationHandler amnesiac(*m_terminal, m_input_filter, m_output_filter);
-    tag_file(path, amnesiac, amnesiac, NULL, -1);
+    ConfirmationHandler amnesiac_artist(*m_terminal, m_input_filter, m_output_filter);
+    ConfirmationHandler amnesiac_album(*m_terminal, m_input_filter, m_output_filter);
+    tag_file(path, amnesiac_artist, amnesiac_album, NULL, -1);
 }
 
 void InteractiveTagger::tag_directory(const fs::path &path)
