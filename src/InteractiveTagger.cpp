@@ -291,7 +291,7 @@ void InteractiveTagger::tag_directory(const fs::path &path)
                     + L"\" is not a valid path, skipping...");
             continue;
         }
-        fs::path boost_path(boost::lexical_cast<std::wstring>(real_path));
+        fs::path boost_path(real_path);
         free(real_path);
 
         // Add to the right list
