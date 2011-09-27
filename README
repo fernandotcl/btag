@@ -34,10 +34,12 @@ EasyTAG or to provide more control over specific tags.
 
 Some specific goals (nothing set in stone, though):
 
+* A test suite for the capitalization and renaming algorithms (1.1.2)
 * Load the configuration from a configuration file (1.2.0)
 * Deprecate some command line switches (1.2.0, removal in 1.3.0)
 * Handle some other tags better (such as the comment tag, 1.2.0)
 * Music Brainz integration (1.3.0)
+* Read the information in CUE files (1.3.0)
 
 
 Contributing
