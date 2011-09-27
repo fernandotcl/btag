@@ -21,11 +21,11 @@ class ConservativeRenamingFilter : public RenamingFilter
             if (c >= L'A' && c <= L'Z') return true;
             if (c >= L'0' && c <= L'9') return true;
 
-            static wchar_t allowed_chars[15] = {
+            static wchar_t allowed_chars[] = {
                 L' ', L'%', L'-', L'_', L'@', L'~', L'`', L'!',
-                L'(', L')', L'{', L'}', L'^', L'#', L'&',
+                L'(', L')', L'{', L'}', L'^', L'#', L'&', L'.'
             };
-            for (int i = 0; i < 15; ++i) {
+            for (unsigned int i = 0; i < sizeof(allowed_chars) / sizeof(wchar_t); ++i) {
                 if (c == allowed_chars[i])
                     return true;
             }
