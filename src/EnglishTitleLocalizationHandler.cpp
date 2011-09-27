@@ -1,7 +1,7 @@
 /*
  * This file is part of btag.
  *
- * © 2010 Fernando Tarlá Cardoso Lemos
+ * © 2010-2011 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
@@ -46,7 +46,7 @@ TitleLocalizationHandler::word_hint EnglishTitleLocalizationHandler::word_hint_f
 
     // Uppercase the first letter of a word after major punctuation
     static const wchar_t major_punctuation[] = {
-        L'.', L':', L'?', L'!', L'—', L')', L'(', L'"', L'\'', L'“', L'”', L'‘', L'’', 0
+        L'.', L':', L'?', L'!', L'—', '-', L')', L'(', L'"', L'\'', L'“', L'”', L'‘', L'’', 0
     };
     if (after_punctuation != 0) {
         for (int i = 0; major_punctuation[i]; ++i) {
