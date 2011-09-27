@@ -1,14 +1,14 @@
 /*
  * This file is part of btag.
  *
- * © 2010 Fernando Tarlá Cardoso Lemos
+ * © 2010-2011 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
  */
 
-#ifndef BASIC_STRING_FILTER
-#define BASIC_STRING_FILTER
+#ifndef BASIC_STRING_FILTER_H
+#define BASIC_STRING_FILTER_H
 
 #include <string>
 

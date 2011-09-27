@@ -1,14 +1,14 @@
 /*
  * This file is part of btag.
  *
- * © 2010 Fernando Tarlá Cardoso Lemos
+ * © 2010-2011 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
  */
 
-#ifndef CONSERVATIVE_RENAMING_FILTER
-#define CONSERVATIVE_RENAMING_FILTER
+#ifndef CONSERVATIVE_RENAMING_FILTER_H
+#define CONSERVATIVE_RENAMING_FILTER_H
 
 #include "RenamingFilter.h"
 

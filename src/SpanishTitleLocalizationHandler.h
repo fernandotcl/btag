@@ -1,14 +1,14 @@
 /*
  * This file is part of btag.
  *
- * © 2010 Fernando Tarlá Cardoso Lemos
+ * © 2010-2011 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
  */
 
-#ifndef SPANISH_TITLE_LOCALIZATION_HANDLER
-#define SPANISH_TITLE_LOCALIZATION_HANDLER
+#ifndef SPANISH_TITLE_LOCALIZATION_HANDLER_H
+#define SPANISH_TITLE_LOCALIZATION_HANDLER_H
 
 #include "TitleLocalizationHandler.h"
 
