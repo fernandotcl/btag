@@ -7,6 +7,7 @@ Those are the dependencies needed to compile btag:
 * Boost headers >= 1.42.0 (libboost-dev in Debian)
 * Boost filesystem >= 1.42.0 (libboost-filesystem-dev in Debian)
 * pkg-config
+* CMake
 
 If you want to compile the manual pages, you'll need something compatible with
 nroff (groff-base in Debian works great).
@@ -15,7 +16,7 @@ nroff (groff-base in Debian works great).
 Installation instructions
 =========================
 
-gtagger uses CMake:
+btag uses CMake:
 
 $ mkdir /path/to/build_dir
 $ cd /path/to/build_dir
