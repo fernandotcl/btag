@@ -49,10 +49,10 @@ TitleLocalizationHandler::word_hint SpanishTitleLocalizationHandler::word_hint_f
 
     // Lowercase some specific words (context insensitive)
     static const wchar_t *lowercase_words[] = {
-        L"el", L"la", L"los", L"las", L"una", L"unas", L"uno", L"unos", L"al", L"del", // articles
+        L"el", L"la", L"los", L"las", L"una", L"unas", L"un", L"unos", L"al", L"del",  // articles
         L"a", L"con", L"de", L"en", L"para", L"por", L"sin",                           // common prepositions
         L"y", L"e", L"o", L"u", L"que", L"ni",                                         // common conjunctions
-        L"me", L"te", L"se", L"nos", L"os", L"se",                                     // reflexive pronouns
+        L"me", L"te", L"se", L"nos", L"os",                                            // reflexive pronouns
         L"vs.", L"etc.", NULL                                                          // some exceptions
     };
     for (int i = 0; lowercase_words[i]; ++i) {
