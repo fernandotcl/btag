@@ -55,3 +55,9 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSIO
 set(CPACK_SOURCE_IGNORE_FILES "/.git;/.gitignore;${CPACK_SOURCE_IGNORE_FILES}")
 include(CPack)
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+
+option(ENABLE_TESTS "Whether a \"make test\" target should be made available" OFF)
+if(ENABLE_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif(ENABLE_TESTS)
