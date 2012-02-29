@@ -32,7 +32,26 @@ bool TitleLocalizationHandler::is_acronym(const std::wstring &word) const
 wchar_t *TitleLocalizationHandler::punctuation_list() const
 {
     static wchar_t punctuation[] = {
-        L',', L'.', L':', L'-', L';', L'?', L'¿', L'!', L'¡', L'-', L'—', L')', L'(', L'"', L'\'', L'“', L'”', L'‘', L'’', 0
+        L',',
+        L'.',
+        L':',
+        L'-',
+        L';',
+        L'?',
+        L'\u00bf',  // Unicode INVERTED QUESTION MARK (¿)
+        L'!',
+        L'\u00a1',  // Unicode INVERTED EXCLAMATION MARK (¡)
+        L'-',
+        L'\u2014',  // Unicode EM DASH (—)
+        L')',
+        L'(',
+        L'"',
+        L'\'',
+        L'\u201c',  // Unicode LEFT DOUBLE QUOTATION MARK (“)
+        L'\u201d',  // Unicode RIGHT DOUBLE QUOTATION MARK (”)
+        L'\u2018',  // Unicode LEFT SINGLE QUOTATION MARK (‘)
+        L'\u2019',  // Unicode RIGHT SINGLE QUOTATION MARK (’)
+        0
     };
     return punctuation;
 }

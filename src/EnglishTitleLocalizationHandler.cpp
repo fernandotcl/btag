@@ -46,7 +46,21 @@ TitleLocalizationHandler::word_hint EnglishTitleLocalizationHandler::word_hint_f
 
     // Uppercase the first letter of a word after major punctuation
     static const wchar_t major_punctuation[] = {
-        L'.', L':', L'?', L'!', L'—', '-', L')', L'(', L'"', L'\'', L'“', L'”', L'‘', L'’', 0
+        L'.',
+        L':',
+        L'?',
+        L'!',
+        L'\u2014',  // Unicode EM DASH (—)
+        L'-',
+        L')',
+        L'(',
+        L'"',
+        L'\'',
+        L'\u201c',  // Unicode LEFT DOUBLE QUOTATION MARK (“)
+        L'\u201d',  // Unicode RIGHT DOUBLE QUOTATION MARK (”)
+        L'\u2018',  // Unicode LEFT SINGLE QUOTATION MARK (‘)
+        L'\u2019',  // Unicode RIGHT SINGLE QUOTATION MARK (’)
+        0
     };
     if (after_punctuation != 0) {
         for (int i = 0; major_punctuation[i]; ++i) {
