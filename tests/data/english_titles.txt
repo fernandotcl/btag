@@ -1,0 +1,49 @@
+#
+# This was initialized with a list of best-sellers found on
+# Wikipedia (though only those that we should handle well).
+# Feel free to extend it with whatever content.
+#
+# Blank lines and lines starting with a hash are ignored, but
+# our parser is very basic, so don't get creative.
+#
+# Keep this file in UTF-8. Not sure if having the BOM is a
+# good thing (avoid it if possible).
+#
+
+A Tale of Two Cities
+The Lord of the Rings
+The Hobbit
+Dream of the Red Chamber
+And Then There Were None
+The Lion, the Witch and the Wardrobe
+Think and Grow Rich
+The Catcher in the Rye
+The Alchemist
+Steps to Christ
+Heidi's Years of Wandering and Learning
+The Common Sense Book of Baby and Child Care
+Anne of Green Gables
+The Name of the Rose
+The Hite Report Shere Hite
+The Tale of Peter Rabbit
+The Ginger Man
+Harry Potter and the Deathly Hallows
+Jonathan Livingston Seagull
+A Message to Garcia
+Angels and Demons
+How the Steel Was Tempered
+War and Peace
+You Can Heal Your Life
+Kane and Abel
+Sophie's World
+The Very Hungry Caterpillar
+The Girl with the Dragon Tattoo
+The Thorn Birds
+The Purpose Driven Life
+One Hundred Years of Solitude
+The Diary of a Young Girl
+Valley of the Dolls
+In His Steps: What Would Jesus Do?
+The Revolt of Mamie Stover
+Gone with the Wind
+To Kill a Mockingbird

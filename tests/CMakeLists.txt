@@ -3,6 +3,8 @@ include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src)
 add_executable(
     EnglishTitleCapitalizationTest
     EnglishTitleCapitalization.cpp
+    TitleCapitalizationBase.cpp
+    TitleCapitalizationBase.h
     ${PROJECT_SOURCE_DIR}/src/BasicStringFilter.cpp
     ${PROJECT_SOURCE_DIR}/src/BasicStringFilter.h
     ${PROJECT_SOURCE_DIR}/src/CapitalizationFilter.h
@@ -14,11 +16,15 @@ add_executable(
     ${PROJECT_SOURCE_DIR}/src/TitleLocalizationHandler.h
 )
 target_link_libraries(EnglishTitleCapitalizationTest ${Boost_LIBRARIES})
-add_test(EnglishTitleCapitalizationTest ${PROJECT_BINARY_DIR}/tests/EnglishTitleCapitalizationTest)
+add_test(EnglishTitleCapitalizationTest
+    ${PROJECT_BINARY_DIR}/tests/EnglishTitleCapitalizationTest
+    ${PROJECT_SOURCE_DIR}/tests/data/english_titles.txt)
 
 add_executable(
     SpanishTitleCapitalizationTest
     SpanishTitleCapitalization.cpp
+    TitleCapitalizationBase.cpp
+    TitleCapitalizationBase.h
     ${PROJECT_SOURCE_DIR}/src/BasicStringFilter.cpp
     ${PROJECT_SOURCE_DIR}/src/BasicStringFilter.h
     ${PROJECT_SOURCE_DIR}/src/CapitalizationFilter.h

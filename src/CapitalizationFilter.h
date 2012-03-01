@@ -10,6 +10,8 @@
 #ifndef CAPITALIZATION_FILTER_H
 #define CAPITALIZATION_FILTER_H
 
+#include <locale>
+
 #include "BasicStringFilter.h"
 
 class CapitalizationFilter : public BasicStringFilter
