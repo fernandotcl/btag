@@ -1,0 +1,79 @@
+#
+# This was initialized with a list of best-sellers found on
+# Wikipedia (though only those that we should handle well).
+# Feel free to extend it with whatever content.
+#
+# Blank lines and lines starting with a hash are ignored, but
+# our parser is very basic, so don't get creative.
+#
+# Keep this file in UTF-8. Not sure if having the BOM is a
+# good thing (avoid it if possible).
+#
+
+Historia de Dos Ciudades
+El Hobbit
+Sueño en el Pabellón Rojo
+Triple Representatividad
+Diez Negritos
+El León, la Bruja y el Armario
+Ella
+El Principito
+El Guardián Entre el Centeno
+El Alquimista
+Heidi
+El Libro del Sentido del Común del Cuidado de Bebés y Niños
+El Nombre de la Rosa
+Ángeles y Demonios
+Así se Templó el Acero
+Guerra y Paz
+Usted Puede Sanar Su Vida
+Matar a un Ruiseñor
+El Valle de las Muñecas
+Lo que el Viento se Llevó
+Cien Años de Soledad
+Una Vida con Propósito
+El Pájaro Espino
+Piense y Hágase Rico
+Los Hombres que No Amaban a las Mujeres
+La Oruguita Glotona
+¿Quién se Ha Llevado Mi Queso?
+El Viento en los Sauces
+1984
+La Prostituta Feliz
+Tiburón
+Siempre te Querré
+La Habitación de las Mujeres
+Qué Esperar Cuando se Está Esperando
+Donde Viven los Monstruos
+El Secreto
+Miedo a Volar
+Adivina Cuánto te Quiero
+Los Siete Hábitos de las Personas Altamente Efectivas
+Cómo Ganar Amigos e Influir Sobre las Personas
+El Perfume: Historia de un Asesino
+El Hombre que Susurraba al Oído de los Caballos
+La Sombra del Viento
+La Cabaña
+Guía del Autoestopista Galáctico
+Martes con Mi Viejo Profesor
+Donde el Corazón te Lleve
+Rebeldes
+Charlie y la Fábrica de Chocolate
+La Peste
+Indigno de Ser Humano
+El Mono Desnudo
+Todo se Desmorona
+El Profeta
+El Exorcista
+El Grúfalo
+Trampa-22
+La Isla de las Tormentas
+Historia del Tiempo
+El Gato con Sombrero
+Desde Mi Cielo
+Cisnes Salvajes
+La Noche
+Cometas en el Cielo
+La Mujer Total
+Historia del Futuro, la Sociedad del Conocimiento
+¿De Qué Color Es Su Paracaídas?

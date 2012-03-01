@@ -30,6 +30,8 @@ add_executable(
     ${PROJECT_SOURCE_DIR}/src/TitleLocalizationHandler.h
 )
 target_link_libraries(SpanishTitleCapitalizationTest ${Boost_LIBRARIES})
-add_test(SpanishTitleCapitalizationTest ${PROJECT_BINARY_DIR}/tests/SpanishTitleCapitalizationTest)
+add_test(SpanishTitleCapitalizationTest
+    ${PROJECT_BINARY_DIR}/tests/SpanishTitleCapitalizationTest
+    ${PROJECT_SOURCE_DIR}/tests/data/spanish_titles.txt)
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure)
