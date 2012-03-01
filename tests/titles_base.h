@@ -7,8 +7,8 @@
  *
  */
 
-#ifndef TITLE_CAPITALIZATION_BASE_H
-#define TITLE_CAPITALIZATION_BASE_H
+#ifndef TITLES_BASE_H
+#define TITLES_BASE_H
 
 #include "TitleCapitalizationFilter.h"
 

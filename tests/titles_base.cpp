@@ -12,7 +12,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "TitleCapitalizationBase.h"
+#include "titles_base.h"
 
 int run_title_capitalization_tests(TitleLocalizationHandler &handler, int argc, char **argv)
 {

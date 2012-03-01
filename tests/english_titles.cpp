@@ -7,11 +7,11 @@
  *
  */
 
-#include "SpanishTitleLocalizationHandler.h"
-#include "TitleCapitalizationBase.h"
+#include "EnglishTitleLocalizationHandler.h"
+#include "titles_base.h"
 
 int main(int argc, char **argv)
 {
-    SpanishTitleLocalizationHandler handler;
+    EnglishTitleLocalizationHandler handler;
     return run_title_capitalization_tests(handler, argc, argv);
 }

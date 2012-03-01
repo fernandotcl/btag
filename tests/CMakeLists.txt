@@ -1,10 +1,10 @@
 include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src)
 
 add_executable(
-    EnglishTitleCapitalizationTest
-    EnglishTitleCapitalization.cpp
-    TitleCapitalizationBase.cpp
-    TitleCapitalizationBase.h
+    english_titles_test
+    english_titles.cpp
+    titles_base.cpp
+    titles_base.h
     ${PROJECT_SOURCE_DIR}/src/BasicStringFilter.cpp
     ${PROJECT_SOURCE_DIR}/src/BasicStringFilter.h
     ${PROJECT_SOURCE_DIR}/src/CapitalizationFilter.h
@@ -15,16 +15,16 @@ add_executable(
     ${PROJECT_SOURCE_DIR}/src/TitleLocalizationHandler.cpp
     ${PROJECT_SOURCE_DIR}/src/TitleLocalizationHandler.h
 )
-target_link_libraries(EnglishTitleCapitalizationTest ${Boost_LIBRARIES})
-add_test(EnglishTitleCapitalizationTest
-    ${PROJECT_BINARY_DIR}/tests/EnglishTitleCapitalizationTest
+target_link_libraries(english_titles_test ${Boost_LIBRARIES})
+add_test(english_titles_test
+    ${PROJECT_BINARY_DIR}/tests/english_titles_test
     ${PROJECT_SOURCE_DIR}/tests/data/english_titles.txt)
 
 add_executable(
-    SpanishTitleCapitalizationTest
-    SpanishTitleCapitalization.cpp
-    TitleCapitalizationBase.cpp
-    TitleCapitalizationBase.h
+    spanish_titles_test
+    spanish_titles.cpp
+    titles_base.cpp
+    titles_base.h
     ${PROJECT_SOURCE_DIR}/src/BasicStringFilter.cpp
     ${PROJECT_SOURCE_DIR}/src/BasicStringFilter.h
     ${PROJECT_SOURCE_DIR}/src/CapitalizationFilter.h
@@ -35,9 +35,9 @@ add_executable(
     ${PROJECT_SOURCE_DIR}/src/TitleLocalizationHandler.cpp
     ${PROJECT_SOURCE_DIR}/src/TitleLocalizationHandler.h
 )
-target_link_libraries(SpanishTitleCapitalizationTest ${Boost_LIBRARIES})
-add_test(SpanishTitleCapitalizationTest
-    ${PROJECT_BINARY_DIR}/tests/SpanishTitleCapitalizationTest
+target_link_libraries(spanish_titles_test ${Boost_LIBRARIES})
+add_test(spanish_titles_test
+    ${PROJECT_BINARY_DIR}/tests/spanish_titles_test
     ${PROJECT_SOURCE_DIR}/tests/data/spanish_titles.txt)
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure)
