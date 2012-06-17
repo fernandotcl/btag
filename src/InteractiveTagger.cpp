@@ -266,21 +266,22 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
 
     // Ask for the year
     boost::optional<int> default_year;
-#ifdef CUESHEET_SUPPORT
-    boost::optional<int> cue_year;
-    if (m_cue) {
-        cue_year = m_cue->year();
-        if (cue_year)
-            default_year = *cue_year;
-    }
-    if (!cue_year) {
-#endif
     if (year && *year != -1)
         default_year = *year;
+#ifdef CUESHEET_SUPPORT
+    else {
+        boost::optional<int> cue_year;
+        if (m_cue) {
+            cue_year = m_cue->year();
+            if (cue_year)
+                default_year = *cue_year;
+        }
+        if (!cue_year && f.tag()->year())
+            default_year = f.tag()->year();
+    }
+#else
     else if (f.tag()->year())
         default_year = f.tag()->year();
-#ifdef CUESHEET_SUPPORT
-    }
 #endif
     YearValidator year_validator;
     int new_year = m_terminal->ask_number_question(L"Year:", default_year, &year_validator);
