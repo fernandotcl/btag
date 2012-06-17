@@ -1,4 +1,4 @@
-.TH BTAG 1 2011-06-04 "btag" "btag Manual"
+.TH BTAG 1 2012-17-06 "btag" "btag Manual"
 .SH NAME
 btag \- A command line based multimedia tagger
 .SH SYNOPSIS
@@ -10,6 +10,9 @@ btag is a TagLib-based command line multimedia tag editor that attempts to autom
 You can supply paths to files or directories to btag. Directories are recursively traversed and all files found are tagged. Directories are also handled differently in the sense that btag will attempt to keep information about the previously tagged files to provide sane defaults for all other files in the same parent directory. Only files with file extensions supported by TagLib are considered.
 .SH OPTIONS
 .TP 33
+.B \-C\fR/\fB\-\-cue\-file \fIfile
+Read existing metadata from the CUE file \fIfile\fR
+.TP
 .B \-D\fR/\fB\-\-dry\-run
 Don't do anything, just show what would have been done (dry run mode)
 .TP

@@ -12,6 +12,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/optional.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <taglib/fileref.h>
 #include <list>
 #include <map>
@@ -19,9 +20,14 @@
 #include <utility>
 
 #include "BasicStringFilter.h"
+#include "config.h"
 #include "ConfirmationHandler.h"
 #include "InteractiveTerminal.h"
 #include "RenamingFilter.h"
+
+#ifdef CUEFILE_SUPPORT
+# include "CueReader.h"
+#endif
 
 class InteractiveTagger
 {
@@ -37,6 +43,10 @@ class InteractiveTagger
         void set_renaming_filter(RenamingFilter *filter) { m_renaming_filter = filter; }
 
         void set_dry_run(bool dry_run = true) { m_dry_run = dry_run; }
+
+#ifdef CUEFILE_SUPPORT
+        void set_cue_file(const std::string &filename);
+#endif
 
         void tag(int num_paths, const char **paths);
 
@@ -59,6 +69,10 @@ class InteractiveTagger
         std::list<std::pair<boost::filesystem::path, boost::filesystem::path> > m_pending_renames;
 
         std::list<std::wstring> m_supported_extensions;
+
+#ifdef CUEFILE_SUPPORT
+        boost::scoped_ptr<CueReader> m_cue;
+#endif
 };
 
 #endif

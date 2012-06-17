@@ -15,6 +15,7 @@
 #include <string>
 
 #include "BasicStringFilter.h"
+#include "config.h"
 #include "ConservativeRenamingFilter.h"
 #include "EnglishTitleLocalizationHandler.h"
 #include "InteractiveTagger.h"
@@ -87,6 +88,9 @@ int main(int argc, char **argv)
     }
 
     struct option long_options[] = {
+#ifdef CUEFILE_SUPPORT
+        {"cue-file", required_argument, NULL, 'C'},
+#endif
         {"dir-rename-format", required_argument, NULL, 'd'},
         {"dry-run", no_argument, NULL, 'D'},
         {"input-filter", required_argument, NULL, 'i'},
@@ -105,10 +109,23 @@ int main(int argc, char **argv)
     boost::scoped_ptr<TitleLocalizationHandler> title_localization_handler;
     boost::scoped_ptr<RenamingFilter> renaming_filter;
 
+    // Create the interactive terminal
+    StandardConsole console;
+    itag.set_terminal(&console);
+
     // Parse the command line options
     int opt;
+#ifdef CUEFILE_SUPPORT
+    while ((opt = getopt_long(argc, argv, "C:Dd:i:f:o:hn:r:t:", long_options, NULL)) != -1) {
+#else
     while ((opt = getopt_long(argc, argv, "Dd:i:f:o:hn:r:t:", long_options, NULL)) != -1) {
+#endif
         switch (opt) {
+#ifdef CUEFILE_SUPPORT
+            case 'C':
+                itag.set_cue_file(optarg);
+                break;
+#endif
             case 'D':
                 itag.set_dry_run();
                 break;
@@ -187,10 +204,6 @@ int main(int argc, char **argv)
     if (!renaming_filter.get())
         renaming_filter.reset(new UnixRenamingFilter);
     itag.set_renaming_filter(renaming_filter.get());
-
-    // Create the interactive terminal
-    StandardConsole console;
-    itag.set_terminal(&console);
 
     // Perform the interactive tagging
     itag.tag(argc - optind, (const char **)&argv[optind]);

@@ -25,6 +25,7 @@ set(BTAG_SOURCES
     src/TitleLocalizationHandler.cpp)
 
 set(BTAG_HEADERS
+    ${CMAKE_CURRENT_BINARY_DIR}/src/config.h
     src/BasicStringFilter.h
     src/CapitalizationFilter.h
     src/ConfirmationHandler.h
@@ -40,16 +41,29 @@ set(BTAG_HEADERS
     src/UnixRenamingFilter.h
     src/wide_string_cast.h)
 
-include_directories(${Boost_INCLUDE_DIRS} ${TAGLIB_INCLUDE_DIRS})
+option(CUEFILE_SUPPORT "Support for reading metadata from CUE files (requires libcue)" ON)
+if(CUEFILE_SUPPORT)
+    pkg_check_modules(LIBCUE REQUIRED libcue)
+    set(BTAG_SOURCES ${BTAG_SOURCES} src/CueReader.cpp)
+    set(BTAG_HEADERS ${BTAG_HEADERS} src/CueReader.h)
+endif(CUEFILE_SUPPORT)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/config.h)
+
+include_directories(
+    ${CMAKE_CURRENT_BINARY_DIR}/src
+    ${Boost_INCLUDE_DIRS}
+    ${TAGLIB_INCLUDE_DIRS}
+    ${LIBCUE_INCLUDE_DIRS})
 
 add_executable(btag ${BTAG_SOURCES} ${BTAG_HEADERS})
-target_link_libraries(btag ${Boost_LIBRARIES} ${TAGLIB_LIBRARIES})
+target_link_libraries(btag ${Boost_LIBRARIES} ${TAGLIB_LIBRARIES} ${LIBCUE_LIBRARIES})
 
 install(TARGETS btag DESTINATION bin)
 
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
-set(CPACK_PACKAGE_VERSION_MINOR "1")
-set(CPACK_PACKAGE_VERSION_PATCH "3")
+set(CPACK_PACKAGE_VERSION_MINOR "2")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_SOURCE_GENERATOR "TGZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 set(CPACK_SOURCE_IGNORE_FILES "/.git;/.gitignore;${CPACK_SOURCE_IGNORE_FILES}")

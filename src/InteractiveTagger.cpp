@@ -32,7 +32,6 @@ InteractiveTagger::InteractiveTagger()
         m_supported_extensions.push_back(L'.' + it->toWString());
 }
 
-
 void InteractiveTagger::set_file_rename_format(const std::string &format)
 {
     m_file_rename_format = boost::lexical_cast<std::wstring>(format);
@@ -42,6 +41,19 @@ void InteractiveTagger::set_dir_rename_format(const std::string &format)
 {
     m_dir_rename_format = boost::lexical_cast<std::wstring>(format);
 }
+
+#ifdef CUEFILE_SUPPORT
+void InteractiveTagger::set_cue_file(const std::string &filename)
+{
+    try {
+        m_cue.reset(new CueReader(filename));
+    }
+    catch (std::exception &e) {
+        m_terminal->display_warning_message(e.what());
+        m_terminal->display_warning_message("Ignoring CUE file");
+    }
+}
+#endif
 
 void InteractiveTagger::tag(int num_paths, const char **paths)
 {
@@ -196,35 +208,6 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
     // Get a reference to the file
     TagLib::FileRef f(path.c_str());
 
-    // Ask for the artist
-    artist_confirmation.reset();
-    if (!f.tag()->artist().isNull())
-        artist_confirmation.set_local_default(m_input_filter->filter(f.tag()->artist().toWString()));
-    artist_confirmation.ask(L"Artist:");
-    while (!artist_confirmation.complies())
-        artist_confirmation.ask(L"Artist (confirmation):");
-    f.tag()->setArtist(artist_confirmation.answer());
-
-    // Ask for the album
-    album_confirmation.reset();
-    if (!f.tag()->album().isNull())
-        album_confirmation.set_local_default(m_input_filter->filter(f.tag()->album().toWString()));
-    album_confirmation.ask(L"Album:");
-    while (!album_confirmation.complies())
-        album_confirmation.ask(L"Album (confirmation):");
-    f.tag()->setAlbum(album_confirmation.answer());
-
-    // Ask for the year
-    boost::optional<int> default_year;
-    if (year && *year != -1)
-        default_year = *year;
-    else if (f.tag()->year())
-        default_year = f.tag()->year();
-    YearValidator year_validator;
-    int new_year = m_terminal->ask_number_question(L"Year:", default_year, &year_validator);
-    f.tag()->setYear(new_year);
-    if (year) *year = new_year;
-
     // Ask for the track
     if (track == -1)
         track = f.tag()->track();
@@ -233,10 +216,81 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
             track > 0 ? track : boost::optional<int>(), &track_validator);
     f.tag()->setTrack(new_track);
 
+    // Ask for the artist
+    artist_confirmation.reset();
+    bool set_artist = false;
+#ifdef CUEFILE_SUPPORT
+    if (m_cue) {
+        boost::optional<std::wstring> artist = m_cue->artist_for_track(track);
+        if (artist) {
+            artist_confirmation.set_local_default(m_input_filter->filter(*artist));
+            set_artist = true;
+        }
+    }
+#endif
+    if (!set_artist && !f.tag()->artist().isNull())
+        artist_confirmation.set_local_default(m_input_filter->filter(f.tag()->artist().toWString()));
+    artist_confirmation.ask(L"Artist:");
+    while (!artist_confirmation.complies())
+        artist_confirmation.ask(L"Artist (confirmation):");
+    f.tag()->setArtist(artist_confirmation.answer());
+
+    // Ask for the album
+    album_confirmation.reset();
+    bool set_album = false;
+#ifdef CUEFILE_SUPPORT
+    if (m_cue) {
+        boost::optional<std::wstring> album = m_cue->album();
+        if (album) {
+            album_confirmation.set_local_default(m_input_filter->filter(*album));
+            set_album = true;
+        }
+    }
+#endif
+    if (!set_album && !f.tag()->album().isNull())
+        album_confirmation.set_local_default(m_input_filter->filter(f.tag()->album().toWString()));
+    album_confirmation.ask(L"Album:");
+    while (!album_confirmation.complies())
+        album_confirmation.ask(L"Album (confirmation):");
+    f.tag()->setAlbum(album_confirmation.answer());
+
+    // Ask for the year
+    boost::optional<int> default_year;
+#ifdef CUEFILE_SUPPORT
+    boost::optional<int> cue_year;
+    if (m_cue) {
+        cue_year = m_cue->year();
+        if (cue_year)
+            default_year = *cue_year;
+    }
+    if (!cue_year) {
+#endif
+    if (year && *year != -1)
+        default_year = *year;
+    else if (f.tag()->year())
+        default_year = f.tag()->year();
+#ifdef CUEFILE_SUPPORT
+    }
+#endif
+    YearValidator year_validator;
+    int new_year = m_terminal->ask_number_question(L"Year:", default_year, &year_validator);
+    f.tag()->setYear(new_year);
+    if (year) *year = new_year;
+
     // Ask for the song title
     ConfirmationHandler title_confirmation(*m_terminal, m_input_filter, m_output_filter);
     title_confirmation.reset();
-    if (!f.tag()->title().isNull())
+    bool set_title = false;
+#ifdef CUEFILE_SUPPORT
+    if (m_cue) {
+        boost::optional<std::wstring> title = m_cue->title_for_track(track);
+        if (title) {
+            title_confirmation.set_local_default(m_input_filter->filter(*title));
+            set_title = true;
+        }
+    }
+#endif
+    if (!set_title && !f.tag()->title().isNull())
         title_confirmation.set_local_default(m_input_filter->filter(f.tag()->title().toWString()));
     title_confirmation.ask(L"Title:");
     while (!title_confirmation.complies())
@@ -325,6 +379,11 @@ void InteractiveTagger::tag_directory(const fs::path &path)
         int track = 1;
         BOOST_FOREACH(const fs::path &p, file_list)
             tag_file(p, artist, album, &year, track++);
+
+#ifdef CUEFILE_SUPPORT
+        // Done using the CUE file, if any
+        m_cue.reset(NULL);
+#endif
     }
 
     // We'll ask confirmation to descend into the subdirectories only if there are files
