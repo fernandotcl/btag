@@ -11,6 +11,7 @@
 #define CUE_READER_H
 
 #include <boost/optional.hpp>
+#include <iconv.h>
 #include <string>
 
 extern "C" {
@@ -33,6 +34,7 @@ class CueReader
         boost::optional<std::wstring> cdtext_string(Cdtext *cdt, Pti pti);
 
         Cd *m_cd;
+        iconv_t m_iconv;
         boost::optional<std::wstring> m_artist;
 };
 

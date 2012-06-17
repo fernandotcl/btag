@@ -15,18 +15,25 @@
 #include "validators.h"
 
 CueReader::CueReader(const std::string &filename)
-    : m_cd(NULL)
+    : m_cd(NULL), m_iconv((iconv_t)-1)
 {
     // Get a file pointer
     FILE *fp = fopen(filename.c_str(), "r");
     if (!fp)
-        throw std::runtime_error("Unable to open CUE file for reading");
+        throw std::runtime_error("Unable to open cue sheet for reading");
 
     // Parse it
     m_cd = cue_parse_file(fp);
     fclose(fp);
     if (!m_cd)
-        throw std::runtime_error("Unable to parse CUE file");
+        throw std::runtime_error("Unable to parse cue sheet");
+
+    // Create an iconv descriptor
+    m_iconv = iconv_open("WCHAR_T//TRANSLIT", "ISO-8859-1");
+    if (m_iconv == (iconv_t)-1) {
+        cd_delete(m_cd);
+        throw std::runtime_error("Unable to create iconv descriptor");
+    }
 
     // Fetch the performing artist
     Cdtext *cdt = cd_get_cdtext(m_cd);
@@ -38,12 +45,34 @@ CueReader::~CueReader()
 {
     if (m_cd)
         cd_delete(m_cd);
+    if (m_iconv != (iconv_t)-1)
+        iconv_close(m_iconv);
 }
 
 boost::optional<std::wstring> CueReader::cdtext_string(Cdtext *cdt, Pti pti)
 {
-    const char *value = cdtext_get(pti, cdt);
-    return value ? boost::lexical_cast<std::wstring>(value) : boost::optional<std::wstring>();
+    // Reset the iconv descriptor
+    iconv(m_iconv, NULL, NULL, NULL, NULL);
+
+    // Get the input buffer
+    char *inbuf = cdtext_get(pti, cdt);
+    if (!inbuf)
+        return boost::optional<std::wstring>();
+
+    // Create the output buffer
+    size_t inbytesleft = strlen(inbuf);
+    size_t outbytesleft = inbytesleft * sizeof(wchar_t);
+    size_t buffer_size = outbytesleft;
+    wchar_t outbuf_data[buffer_size / sizeof(wchar_t)];
+    char *outbuf = reinterpret_cast<char *>(outbuf_data);
+
+    // Do the conversion
+    size_t rc = iconv(m_iconv, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
+    if (rc == (size_t)-1)
+        return boost::optional<std::wstring>();
+
+    // Create and return a wide string
+    return std::wstring(outbuf_data, (buffer_size - outbytesleft) / sizeof(wchar_t));
 }
 
 boost::optional<std::wstring> CueReader::album()
