@@ -91,7 +91,7 @@ int main(int argc, char **argv)
     struct option long_options[] = {
         {"always-ask-track", no_argument, NULL, 0},
 #ifdef CUEFILE_SUPPORT
-        {"cue-file", required_argument, NULL, 'C'},
+        {"cue-sheet", required_argument, NULL, 'C'},
 #endif
         {"dir-rename-format", required_argument, NULL, 'd'},
         {"dry-run", no_argument, NULL, 'D'},

@@ -12,6 +12,7 @@ The following features are implemented:
 * Tag normalization and filtering
 * Locale-aware title capitalization
 * Renaming of files and directories
+* Reading metadata from cue sheets
 
 References:
 
