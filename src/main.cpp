@@ -7,6 +7,7 @@
  *
  */
 
+#include <boost/optional.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <cstdlib>
 #include <cstring>
@@ -92,6 +93,7 @@ int main(int argc, char **argv)
         {"always-ask-track", no_argument, NULL, 0},
 #ifdef CUEFILE_SUPPORT
         {"cue-sheet", required_argument, NULL, 'C'},
+        {"cue-sheet-encoding", required_argument, NULL, 0},
 #endif
         {"dir-rename-format", required_argument, NULL, 'd'},
         {"dry-run", no_argument, NULL, 'D'},
@@ -115,6 +117,10 @@ int main(int argc, char **argv)
     StandardConsole console;
     itag.set_terminal(&console);
 
+    // Cue sheet filename and encoding
+    boost::optional<std::string> cue_filename;
+    std::string cue_encoding("ISO-8859-1");
+
     // Parse the command line options
     int opt, option_index;
 #ifdef CUEFILE_SUPPORT
@@ -125,7 +131,7 @@ int main(int argc, char **argv)
         switch (opt) {
 #ifdef CUEFILE_SUPPORT
             case 'C':
-                itag.set_cue_file(optarg);
+                cue_filename = optarg;
                 break;
 #endif
             case 'D':
@@ -179,6 +185,10 @@ int main(int argc, char **argv)
             case 0:
                 if (!strcmp(long_options[option_index].name, "always-ask-track"))
                     itag.set_ask_track();
+#ifdef CUEFILE_SUPPORT
+                else if (!strcmp(long_options[option_index].name, "cue-sheet-encoding"))
+                    cue_encoding = optarg;
+#endif
                 break;
             default:
                 print_usage(std::cerr);
@@ -191,6 +201,12 @@ int main(int argc, char **argv)
         print_usage(std::cerr);
         return EXIT_FAILURE;
     }
+
+#ifdef CUEFILE_SUPPORT
+    // Load the cue sheet if needed
+    if (cue_filename)
+        itag.load_cue_sheet(*cue_filename, cue_encoding);
+#endif
 
     // Add the title localization handler
     if (!title_localization_handler.get())

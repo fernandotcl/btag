@@ -21,7 +21,7 @@ extern "C" {
 class CueReader
 {
     public:
-        CueReader(const std::string &filename);
+        CueReader(const std::string &filename, const std::string &encoding);
         ~CueReader();
 
         boost::optional<std::wstring> artist_for_track(int track);

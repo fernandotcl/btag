@@ -16,6 +16,9 @@ Always ask for confirmation for the track number
 .B \-C\fR/\fB\-\-cue\-sheet \fIfile
 Read any existing metadata from the cue sheet \fIfile\fR
 .TP
+.B \fB\-\-cue\-sheet\-encoding \fIenc
+Assume encoding \fIenc\fR for the cue sheet (often \fIUTF-8\fR or \fIISO-8859-1\fR)
+.TP
 .B \-D\fR/\fB\-\-dry\-run
 Don't do anything, just show what would have been done (dry run mode)
 .TP
@@ -104,6 +107,12 @@ Conservative character replacements are performed, recommended for FAT32 file sy
 .TP
 .B unix
 Generates file and directory names that should be valid in an Unix environment (default)
+.SH NOTES
+You can specify any encoding supported by \fBiconv_open\fR(3).
+.SH BUGS
+There is no standard encoding for cue sheets, so btag assumes ISO-8859-1 if no encoding is specified.
+
+Although you can specify any encoding for cue sheets, the body of the cue sheet will be read using the system's locale. Only the text fields in the cue sheet are converted from the specified encoding. To prevent trouble, use an ASCII-compatible system-wide charset (preferably UTF-8) and stick to ASCII-compatible encodings for cue sheets (preferably ISO-8859-1).
 .SH EXAMPLE
 Using title casing with English rules and sensible renaming formats generating FAT32\-safe file and directory names:
 

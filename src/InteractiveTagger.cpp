@@ -44,10 +44,10 @@ void InteractiveTagger::set_dir_rename_format(const std::string &format)
 }
 
 #ifdef CUEFILE_SUPPORT
-void InteractiveTagger::set_cue_file(const std::string &filename)
+void InteractiveTagger::load_cue_sheet(const std::string &filename, const std::string &encoding)
 {
     try {
-        m_cue.reset(new CueReader(filename));
+        m_cue.reset(new CueReader(filename, encoding));
     }
     catch (std::exception &e) {
         m_terminal->display_warning_message(e.what());

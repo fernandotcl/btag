@@ -14,7 +14,7 @@
 #include "CueReader.h"
 #include "validators.h"
 
-CueReader::CueReader(const std::string &filename)
+CueReader::CueReader(const std::string &filename, const std::string &encoding)
     : m_cd(NULL), m_iconv((iconv_t)-1)
 {
     // Get a file pointer
@@ -29,7 +29,7 @@ CueReader::CueReader(const std::string &filename)
         throw std::runtime_error("Unable to parse cue sheet");
 
     // Create an iconv descriptor
-    m_iconv = iconv_open("WCHAR_T//TRANSLIT", "ISO-8859-1");
+    m_iconv = iconv_open("WCHAR_T//TRANSLIT", encoding.c_str());
     if (m_iconv == (iconv_t)-1) {
         cd_delete(m_cd);
         throw std::runtime_error("Unable to create iconv descriptor");

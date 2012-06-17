@@ -46,7 +46,7 @@ class InteractiveTagger
         void set_ask_track(bool ask_track = true) { m_ask_track = ask_track; }
 
 #ifdef CUEFILE_SUPPORT
-        void set_cue_file(const std::string &filename);
+        void load_cue_sheet(const std::string &filename, const std::string &encoding);
 #endif
 
         void tag(int num_paths, const char **paths);
