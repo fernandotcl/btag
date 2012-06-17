@@ -10,6 +10,9 @@ btag is a TagLib-based command line multimedia tag editor that attempts to autom
 You can supply paths to files or directories to btag. Directories are recursively traversed and all files found are tagged. Directories are also handled differently in the sense that btag will attempt to keep information about the previously tagged files to provide sane defaults for all other files in the same parent directory. Only files with file extensions supported by TagLib are considered.
 .SH OPTIONS
 .TP 33
+.B \-\-always-ask-track
+Always ask for confirmation for the track number
+.TP
 .B \-C\fR/\fB\-\-cue\-file \fIfile
 Read existing metadata from the CUE file \fIfile\fR
 .TP

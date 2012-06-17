@@ -9,6 +9,7 @@
 
 #include <boost/scoped_ptr.hpp>
 #include <cstdlib>
+#include <cstring>
 #include <getopt.h>
 #include <iostream>
 #include <locale>
@@ -88,6 +89,7 @@ int main(int argc, char **argv)
     }
 
     struct option long_options[] = {
+        {"always-ask-track", no_argument, NULL, 0},
 #ifdef CUEFILE_SUPPORT
         {"cue-file", required_argument, NULL, 'C'},
 #endif
@@ -114,11 +116,11 @@ int main(int argc, char **argv)
     itag.set_terminal(&console);
 
     // Parse the command line options
-    int opt;
+    int opt, option_index;
 #ifdef CUEFILE_SUPPORT
-    while ((opt = getopt_long(argc, argv, "C:Dd:i:f:o:hn:r:t:", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "C:Dd:i:f:o:hn:r:t:", long_options, &option_index)) != -1) {
 #else
-    while ((opt = getopt_long(argc, argv, "Dd:i:f:o:hn:r:t:", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "Dd:i:f:o:hn:r:t:", long_options, &option_index)) != -1) {
 #endif
         switch (opt) {
 #ifdef CUEFILE_SUPPORT
@@ -173,6 +175,10 @@ int main(int argc, char **argv)
                     print_usage(std::cerr);
                     return EXIT_FAILURE;
                 }
+                break;
+            case 0:
+                if (!strcmp(long_options[option_index].name, "always-ask-track"))
+                    itag.set_ask_track();
                 break;
             default:
                 print_usage(std::cerr);

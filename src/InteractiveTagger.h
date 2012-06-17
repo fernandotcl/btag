@@ -43,6 +43,7 @@ class InteractiveTagger
         void set_renaming_filter(RenamingFilter *filter) { m_renaming_filter = filter; }
 
         void set_dry_run(bool dry_run = true) { m_dry_run = dry_run; }
+        void set_ask_track(bool ask_track = true) { m_ask_track = ask_track; }
 
 #ifdef CUEFILE_SUPPORT
         void set_cue_file(const std::string &filename);
@@ -63,7 +64,7 @@ class InteractiveTagger
         RenamingFilter *m_renaming_filter;
         InteractiveTerminal *m_terminal;
         boost::optional<std::wstring> m_file_rename_format, m_dir_rename_format;
-        bool m_dry_run;
+        bool m_dry_run, m_ask_track;
 
         std::list<TagLib::FileRef> m_unsaved_files;
         std::list<std::pair<boost::filesystem::path, boost::filesystem::path> > m_pending_renames;

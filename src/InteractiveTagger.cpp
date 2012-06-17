@@ -24,7 +24,8 @@
 namespace fs = boost::filesystem;
 
 InteractiveTagger::InteractiveTagger()
-    : m_input_filter(NULL), m_output_filter(NULL), m_dry_run(false)
+    : m_input_filter(NULL), m_output_filter(NULL),
+      m_dry_run(false), m_ask_track(false)
 {
     // Load the extensions supported by TagLib
     TagLib::StringList extensions = TagLib::FileRef::defaultFileExtensions();
@@ -209,12 +210,21 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
     TagLib::FileRef f(path.c_str());
 
     // Ask for the track
-    if (track == -1)
-        track = f.tag()->track();
+    bool ask_track = m_ask_track;
     TrackValidator track_validator;
-    int new_track = m_terminal->ask_number_question(L"Track:",
-            track > 0 ? track : boost::optional<int>(), &track_validator);
-    f.tag()->setTrack(new_track);
+    if (track == -1) {
+        track = f.tag()->track();
+        boost::optional<std::wstring> error_message;
+        if (!track_validator.validate(track, error_message)) {
+            track = 0;
+            ask_track = true;
+        }
+    }
+    if (ask_track) {
+        track = m_terminal->ask_number_question(L"Track:",
+                track > 0 ? track : boost::optional<int>(), &track_validator);
+    }
+    f.tag()->setTrack(track);
 
     // Ask for the artist
     artist_confirmation.reset();
@@ -277,6 +287,10 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
     f.tag()->setYear(new_year);
     if (year) *year = new_year;
 
+    // Display the track number closer to the song title
+    if (!ask_track)
+        m_terminal->display_info_message("Track: " + boost::lexical_cast<std::string>(track));
+
     // Ask for the song title
     ConfirmationHandler title_confirmation(*m_terminal, m_input_filter, m_output_filter);
     title_confirmation.reset();
@@ -310,7 +324,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
         tokens[L"artist"] = m_renaming_filter->filter(artist_confirmation.answer());
         tokens[L"album"] = m_renaming_filter->filter(album_confirmation.answer());
         tokens[L"year"] = boost::lexical_cast<std::wstring>(new_year);
-        std::wstring track_str(boost::lexical_cast<std::wstring>(new_track));
+        std::wstring track_str(boost::lexical_cast<std::wstring>(track));
         if (track_str.size() == 1) track_str = L"0" + track_str;
         tokens[L"track"] = track_str;
         tokens[L"title"] = m_renaming_filter->filter(title_confirmation.answer());
