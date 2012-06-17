@@ -25,7 +25,7 @@
 #include "InteractiveTerminal.h"
 #include "RenamingFilter.h"
 
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
 # include "CueReader.h"
 #endif
 
@@ -45,7 +45,7 @@ class InteractiveTagger
         void set_dry_run(bool dry_run = true) { m_dry_run = dry_run; }
         void set_ask_track(bool ask_track = true) { m_ask_track = ask_track; }
 
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
         void load_cue_sheet(const std::string &filename, const std::string &encoding);
 #endif
 
@@ -71,7 +71,7 @@ class InteractiveTagger
 
         std::list<std::wstring> m_supported_extensions;
 
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
         boost::scoped_ptr<CueReader> m_cue;
 #endif
 };

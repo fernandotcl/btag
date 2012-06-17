@@ -41,12 +41,12 @@ set(BTAG_HEADERS
     src/UnixRenamingFilter.h
     src/wide_string_cast.h)
 
-option(CUEFILE_SUPPORT "Support for reading metadata from CUE files (requires libcue)" ON)
-if(CUEFILE_SUPPORT)
+option(CUESHEET_SUPPORT "Support for reading metadata from cue sheets (requires libcue)" ON)
+if(CUESHEET_SUPPORT)
     pkg_check_modules(LIBCUE REQUIRED libcue)
     set(BTAG_SOURCES ${BTAG_SOURCES} src/CueReader.cpp)
     set(BTAG_HEADERS ${BTAG_HEADERS} src/CueReader.h)
-endif(CUEFILE_SUPPORT)
+endif(CUESHEET_SUPPORT)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/config.h)
 

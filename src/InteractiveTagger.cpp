@@ -43,7 +43,7 @@ void InteractiveTagger::set_dir_rename_format(const std::string &format)
     m_dir_rename_format = boost::lexical_cast<std::wstring>(format);
 }
 
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
 void InteractiveTagger::load_cue_sheet(const std::string &filename, const std::string &encoding)
 {
     try {
@@ -229,7 +229,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
     // Ask for the artist
     artist_confirmation.reset();
     bool set_artist = false;
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
     if (m_cue) {
         boost::optional<std::wstring> artist = m_cue->artist_for_track(track);
         if (artist) {
@@ -248,7 +248,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
     // Ask for the album
     album_confirmation.reset();
     bool set_album = false;
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
     if (m_cue) {
         boost::optional<std::wstring> album = m_cue->album();
         if (album) {
@@ -266,7 +266,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
 
     // Ask for the year
     boost::optional<int> default_year;
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
     boost::optional<int> cue_year;
     if (m_cue) {
         cue_year = m_cue->year();
@@ -279,7 +279,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
         default_year = *year;
     else if (f.tag()->year())
         default_year = f.tag()->year();
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
     }
 #endif
     YearValidator year_validator;
@@ -295,7 +295,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
     ConfirmationHandler title_confirmation(*m_terminal, m_input_filter, m_output_filter);
     title_confirmation.reset();
     bool set_title = false;
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
     if (m_cue) {
         boost::optional<std::wstring> title = m_cue->title_for_track(track);
         if (title) {
@@ -394,7 +394,7 @@ void InteractiveTagger::tag_directory(const fs::path &path)
         BOOST_FOREACH(const fs::path &p, file_list)
             tag_file(p, artist, album, &year, track++);
 
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
         // Done using the CUE file, if any
         m_cue.reset(NULL);
 #endif

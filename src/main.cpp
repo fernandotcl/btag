@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 
     struct option long_options[] = {
         {"always-ask-track", no_argument, NULL, 0},
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
         {"cue-sheet", required_argument, NULL, 'C'},
         {"cue-sheet-encoding", required_argument, NULL, 0},
 #endif
@@ -123,13 +123,13 @@ int main(int argc, char **argv)
 
     // Parse the command line options
     int opt, option_index;
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
     while ((opt = getopt_long(argc, argv, "C:Dd:i:f:o:hn:r:t:", long_options, &option_index)) != -1) {
 #else
     while ((opt = getopt_long(argc, argv, "Dd:i:f:o:hn:r:t:", long_options, &option_index)) != -1) {
 #endif
         switch (opt) {
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
             case 'C':
                 cue_filename = optarg;
                 break;
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
             case 0:
                 if (!strcmp(long_options[option_index].name, "always-ask-track"))
                     itag.set_ask_track();
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
                 else if (!strcmp(long_options[option_index].name, "cue-sheet-encoding"))
                     cue_encoding = optarg;
 #endif
@@ -202,7 +202,7 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-#ifdef CUEFILE_SUPPORT
+#ifdef CUESHEET_SUPPORT
     // Load the cue sheet if needed
     if (cue_filename)
         itag.load_cue_sheet(*cue_filename, cue_encoding);
