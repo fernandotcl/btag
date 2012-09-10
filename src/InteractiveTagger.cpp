@@ -71,7 +71,7 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
             m_terminal->display_warning_message(errstr);
             continue;
         }
-        path_list.push_back(fs::path(boost::lexical_cast<std::wstring>(std::string(real_path))));
+        path_list.push_back(fs::path(real_path));
         free(real_path);
     }
 
