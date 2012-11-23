@@ -39,7 +39,7 @@ int run_title_capitalization_tests(TitleLocalizationHandler &handler, int argc, 
     TitleCapitalizationFilter filter;
     filter.set_localization_handler(&handler);
 
-    int errors = 0, correct_lines = 0, lineno = 0;
+    int errors = 0, correct_lines = 0, lineno = 1;
     std::wstring line;
     for (;;) {
         // Get a line
