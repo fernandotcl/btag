@@ -67,6 +67,7 @@ TitleLocalizationHandler::word_hint SpanishTitleLocalizationHandler::word_hint_f
         L"a", L"con", L"de", L"en", L"para", L"por", L"sin",                           // common prepositions
         L"y", L"e", L"o", L"u", L"que", L"ni",                                         // common conjunctions
         L"me", L"te", L"se", L"nos", L"os",                                            // reflexive pronouns
+        L"mi", L"mis", L"tu", L"tus", L"su", L"sus",                                   // short possessive adjectives
         L"vs.", L"etc.", NULL                                                          // some exceptions
     };
     for (int i = 0; lowercase_words[i]; ++i) {
