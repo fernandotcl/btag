@@ -46,6 +46,10 @@ if(CUESHEET_SUPPORT)
     pkg_check_modules(LIBCUE REQUIRED libcue)
     set(BTAG_SOURCES ${BTAG_SOURCES} src/CueReader.cpp)
     set(BTAG_HEADERS ${BTAG_HEADERS} src/CueReader.h)
+    find_library(ICONV_LIBRARIES NAMES iconv)
+    if(ICONV_LIBRARIES)
+        set(EXTRA_LIBRARIES ${EXTRA_LIBRARIES} ${ICONV_LIBRARIES})
+    endif(ICONV_LIBRARIES)
 endif(CUESHEET_SUPPORT)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/config.h)
@@ -57,7 +61,11 @@ include_directories(
     ${LIBCUE_INCLUDE_DIRS})
 
 add_executable(btag ${BTAG_SOURCES} ${BTAG_HEADERS})
-target_link_libraries(btag ${Boost_LIBRARIES} ${TAGLIB_LIBRARIES} ${LIBCUE_LIBRARIES})
+target_link_libraries(btag
+    ${Boost_LIBRARIES}
+    ${TAGLIB_LIBRARIES}
+    ${LIBCUE_LIBRARIES}
+    ${EXTRA_LIBRARIES})
 
 install(TARGETS btag DESTINATION bin)
 
