@@ -8,6 +8,7 @@
  */
 
 #include <boost/algorithm/string.hpp>
+#include <boost/locale.hpp>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -31,7 +32,8 @@ int run_title_capitalization_tests(TitleLocalizationHandler &handler, int argc, 
 
     // Force an UTF-8 locale
     std::ios_base::sync_with_stdio(false);
-    std::locale locale(std::locale::classic(), "C.UTF-8", std::locale::ctype);
+    boost::locale::generator gen;
+    std::locale locale(gen("en_US.UTF-8"));
     f.imbue(locale);
     std::wcerr.imbue(locale);
 

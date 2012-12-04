@@ -9,6 +9,7 @@
 
 #include <boost/optional.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/locale.hpp>
 #include <cstdlib>
 #include <cstring>
 #include <getopt.h>
@@ -77,17 +78,12 @@ static RenamingFilter *select_renaming_filter(const std::string &filter)
 int main(int argc, char **argv)
 {
     // Set the global locale for case conversion purposes
-    const char *locale_name = getenv("LANG");
-    if (locale_name) {
-        std::ios_base::sync_with_stdio(false);
-        std::locale locale(std::locale::classic(), locale_name, std::locale::ctype);
-        std::locale::global(locale);
-        std::wcout.imbue(locale);
-        std::wcin.imbue(locale);
-    }
-    else {
-        std::cerr << "WARNING: $LANG is not defined" << std::endl;
-    }
+    std::ios_base::sync_with_stdio(false);
+    boost::locale::generator gen;
+    std::locale locale(gen(""));
+    std::locale::global(locale);
+    std::wcout.imbue(locale);
+    std::wcin.imbue(locale);
 
     struct option long_options[] = {
         {"always-ask-track", no_argument, NULL, 0},

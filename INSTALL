@@ -5,8 +5,10 @@ Those are the dependencies needed to compile btag:
 
 * TagLib (libtag1-dev in Debian)
 * libcue (libcue-dev in Debian, optional)
-* Boost headers >= 1.42.0 (libboost-dev in Debian)
-* Boost filesystem >= 1.42.0 (libboost-filesystem-dev in Debian)
+* Boost headers >= 1.52.0 (libboost-dev in Debian)
+* Boost filesystem >= 1.52.0 (libboost-filesystem-dev in Debian)
+* Boost locale >= 1.52.0 (libboost-locale-dev in Debian)
+* Boost system >= 1.52.0 (libboost-system-dev in Debian)
 * pkg-config
 * CMake
 
