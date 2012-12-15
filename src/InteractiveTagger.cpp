@@ -18,6 +18,7 @@
 #include <exception>
 
 #include "InteractiveTagger.h"
+#include "number_cast.h"
 #include "validators.h"
 #include "wide_string_cast.h"
 
@@ -290,7 +291,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
 
     // Display the track number closer to the song title
     if (!ask_track)
-        m_terminal->display_info_message("Track: " + boost::lexical_cast<std::string>(track));
+        m_terminal->display_info_message(L"Track: " + number_cast(track));
 
     // Ask for the song title
     ConfirmationHandler title_confirmation(*m_terminal, m_input_filter, m_output_filter);
@@ -324,8 +325,8 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
         std::map<std::wstring, std::wstring> tokens;
         tokens[L"artist"] = m_renaming_filter->filter(artist_confirmation.answer());
         tokens[L"album"] = m_renaming_filter->filter(album_confirmation.answer());
-        tokens[L"year"] = boost::lexical_cast<std::wstring>(new_year);
-        std::wstring track_str(boost::lexical_cast<std::wstring>(track));
+        tokens[L"year"] = number_cast(new_year);
+        std::wstring track_str(number_cast(track));
         if (track_str.size() == 1) track_str = L"0" + track_str;
         tokens[L"track"] = track_str;
         tokens[L"title"] = m_renaming_filter->filter(title_confirmation.answer());
@@ -413,7 +414,7 @@ void InteractiveTagger::tag_directory(const fs::path &path)
         std::map<std::wstring, std::wstring> tokens;
         tokens[L"artist"] = m_renaming_filter->filter(artist.answer());
         tokens[L"album"] = m_renaming_filter->filter(album.answer());
-        tokens[L"year"] = boost::lexical_cast<std::wstring>(year);
+        tokens[L"year"] = number_cast(year);
         fs::path new_path = path.parent_path();
         new_path /= replace_tokens(*m_dir_rename_format, tokens);
         if (new_path != path)

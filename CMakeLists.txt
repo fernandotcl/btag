@@ -32,6 +32,7 @@ set(BTAG_HEADERS
     src/ConservativeRenamingFilter.h
     src/EnglishTitleLocalizationHandler.h
     src/InteractiveTagger.h
+    src/number_cast.h
     src/RenamingFilter.h
     src/SimpleCapitalizationFilter.h
     src/SpanishTitleLocalizationHandler.h
