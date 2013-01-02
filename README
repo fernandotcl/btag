@@ -26,6 +26,13 @@ Configuration
 All configuration is done through command line switches. Refer to btag(1) for
 more information on the supported switches.
 
+You might want to set a shell alias instead of typing all the switches every
+time you run btag. For instance, in Bash shell syntax:
+
+$ alias btag='btag -f title -t en -d "%album (%year)" -r "%track. %title"'
+
+Note that you can override the switches you specified in the alias.
+
 
 Future goals
 ============
