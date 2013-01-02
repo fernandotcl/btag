@@ -2,6 +2,7 @@
 =====
 
 * Support for reading metadata from cue sheets.
+* Fix crashes in non-ASCII paths.
 
 1.1.3
 =====
