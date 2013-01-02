@@ -33,13 +33,6 @@ Future goals
 btag is already usable as of now. It wouldn't hurt to bring more features from
 EasyTAG or to provide more control over specific tags.
 
-Some specific goals (nothing set in stone, though):
-
-* Handle some other tags better (such as the comment tag, 1.2.0)
-* Load the configuration from a configuration file (1.3.0)
-* Deprecate some command line switches (1.3.0, removal in 1.4.0)
-* Music Brainz integration (1.3.0)
-
 
 Contributing
 ============
