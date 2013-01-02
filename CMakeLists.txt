@@ -6,7 +6,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb -O0")
 endif(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
-find_package(Boost 1.52.0 COMPONENTS filesystem locale system REQUIRED)
+find_package(Boost 1.49.0 COMPONENTS filesystem locale system REQUIRED)
 
 find_package(PkgConfig)
 pkg_check_modules(TAGLIB REQUIRED taglib)
