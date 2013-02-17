@@ -35,7 +35,7 @@ class ConfirmationHandler
         BasicStringFilter *m_input_filter, *m_output_filter;
 
         std::wstring m_global_def, m_local_def, m_output;
-        bool m_retry, m_complies;
+        bool m_complies;
 };
 
 #endif
