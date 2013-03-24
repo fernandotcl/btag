@@ -1,4 +1,6 @@
-include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src)
+include_directories(
+    ${Boost_INCLUDE_DIRS}
+    ${PROJECT_SOURCE_DIR}/src)
 
 add_executable(
     english_titles_test
@@ -40,4 +42,5 @@ add_test(spanish_titles_test
     ${PROJECT_BINARY_DIR}/tests/spanish_titles_test
     ${PROJECT_SOURCE_DIR}/tests/data/spanish_titles.txt)
 
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure)
+add_custom_target(check
+    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure)

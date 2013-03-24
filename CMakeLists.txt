@@ -10,6 +10,15 @@ find_package(Boost 1.49.0 COMPONENTS filesystem locale system REQUIRED)
 find_package(PkgConfig)
 pkg_check_modules(TAGLIB REQUIRED taglib)
 
+option(CUESHEET_SUPPORT "Support for reading metadata from cue sheets" ON)
+if(CUESHEET_SUPPORT)
+    pkg_check_modules(LIBCUE REQUIRED libcue)
+    find_library(ICONV_LIBRARIES NAMES iconv)
+    if(ICONV_LIBRARIES)
+        set(EXTRA_LIBRARIES ${EXTRA_LIBRARIES} ${ICONV_LIBRARIES})
+    endif(ICONV_LIBRARIES)
+endif(CUESHEET_SUPPORT)
+
 set(BTAG_SOURCES
     src/BasicStringFilter.cpp
     src/ConfirmationHandler.cpp
@@ -41,35 +50,31 @@ set(BTAG_HEADERS
     src/UnixRenamingFilter.h
     src/wide_string_cast.h)
 
-option(CUESHEET_SUPPORT "Support for reading metadata from cue sheets (requires libcue)" ON)
 if(CUESHEET_SUPPORT)
-    pkg_check_modules(LIBCUE REQUIRED libcue)
     set(BTAG_SOURCES ${BTAG_SOURCES} src/CueReader.cpp)
     set(BTAG_HEADERS ${BTAG_HEADERS} src/CueReader.h)
-    find_library(ICONV_LIBRARIES NAMES iconv)
-    if(ICONV_LIBRARIES)
-        set(EXTRA_LIBRARIES ${EXTRA_LIBRARIES} ${ICONV_LIBRARIES})
-    endif(ICONV_LIBRARIES)
 endif(CUESHEET_SUPPORT)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/config.h)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/src/config.h)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/src
     ${Boost_INCLUDE_DIRS}
-    ${TAGLIB_INCLUDE_DIRS}
-    ${LIBCUE_INCLUDE_DIRS})
+    ${LIBCUE_INCLUDE_DIRS}
+    ${TAGLIB_INCLUDE_DIRS})
 
 add_executable(btag ${BTAG_SOURCES} ${BTAG_HEADERS})
 target_link_libraries(btag
     ${Boost_LIBRARIES}
-    ${TAGLIB_LIBRARIES}
     ${LIBCUE_LIBRARIES}
+    ${TAGLIB_LIBRARIES}
     ${EXTRA_LIBRARIES})
 
 install(TARGETS btag DESTINATION bin)
 
-option(ENABLE_TESTS "Whether a \"make check\" target should be made available" OFF)
+option(ENABLE_TESTS "Make the check target available" OFF)
 if(ENABLE_TESTS)
     enable_testing()
     add_subdirectory(tests)
