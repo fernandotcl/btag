@@ -1,49 +1,70 @@
 /*
  * This file is part of btag.
  *
- * © 2010 Fernando Tarlá Cardoso Lemos
+ * © 2010,2013 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
  */
 
 #include <boost/lexical_cast.hpp>
+#include <cassert>
+#include <cstdio>
 #include <iostream>
 
+#include "number_cast.h"
 #include "StandardConsole.h"
+
+EditLine *StandardConsole::m_editline;
+std::wstring StandardConsole::m_editline_prompt;
+
+wchar_t *StandardConsole::editline_prompt_callback(EditLine *editline)
+{
+    return const_cast<wchar_t *>(m_editline_prompt.c_str());
+}
+
+StandardConsole::StandardConsole()
+{
+    m_editline = el_init("btag", stdin, stdout, stderr);
+    assert(m_editline);
+
+    el_wset(m_editline, EL_EDITOR, L"emacs");
+    el_wset(m_editline, EL_PROMPT, &StandardConsole::editline_prompt_callback);
+}
+
+StandardConsole::~StandardConsole()
+{
+    el_end(m_editline);
+}
 
 bool StandardConsole::ask_yes_no_question(const std::wstring &question,
         const boost::optional<bool> &default_answer)
 {
-    for (;;) {
-        std::wcout << question;
-        if (default_answer)
-            std::wcout << (*default_answer ? L" [Y/n] " : L" [y/N] ");
-        else
-            std::wcout << L" [y/n] ";
+    std::wstring yn;
+    if (default_answer) {
+        yn = *default_answer ? L"Y/n" : L"y/N";
+    } else {
+        yn = L"y/n";
+    }
 
-        std::wstring a;
-        std::getline(std::wcin, a);
-        if (default_answer && a.empty()) {
+    std::wcout << question << " [" << yn << "]? ";
+    std::wcout.flush();
+
+    for (;;) {
+        wchar_t c = 0;
+        el_wgetc(m_editline, &c);
+        if (c == L'\n' && default_answer) {
+            std::wcout << std::endl;
             return *default_answer;
         }
-        else if (a.size() == 1) {
-            if (a[0] == 'y' || a[0] == 'Y')
-                return true;
-            else if (a[0] == 'n' || a[0] == 'y')
-                return false;
-        }
-        else if (a.size() == 2 && (a[0] == 'n' || a[0] == 'N')
-                && (a[1] == 'o' || a[1] == 'O')) {
-            return false;
-        }
-        else if (a.size() == 3 && (a[0] == 'y' || a[0] == 'Y')
-                && (a[1] == 'e' || a[1] == 'E')
-                && (a[2] == 's' || a[2] == 'S')) {
+        else if (c == L'y' || c == L'Y') {
+            std::wcout << c << std::endl;
             return true;
         }
-
-        std::wcout << L"Please answer \"y\" or \"n\"" << std::endl;
+        else if (c == L'n' || c == L'N') {
+            std::wcout << c << std::endl;
+            return false;
+        }
     }
 }
 
@@ -52,28 +73,17 @@ std::wstring StandardConsole::ask_string_question(const std::wstring &question,
         const Validator<std::wstring> *validator)
 {
     for (;;) {
-        std::wcout << question << (default_answer ? L" [" + *default_answer + L"] " : L" ");
+        m_editline_prompt = question + L": ";
 
-        std::wstring answer;
-        std::getline(std::wcin, answer);
-        if (answer.empty()) {
-            if (default_answer)
-                return *default_answer;
-        }
-        else {
-            if (validator) {
-                boost::optional<std::wstring> error_message;
-                if (validator->validate(answer, error_message))
-                    return answer;
-                std::wcout << (error_message ? *error_message : L"Unknown validation error") << std::endl;
-                continue;
-            }
-            else {
-                return answer;
-            }
-        }
+        if (default_answer)
+            el_wpush(m_editline, default_answer->c_str());
 
-        std::wcout << L"Please answer the question" << std::endl;
+        int length;
+        const wchar_t *response = el_wgets(m_editline, &length);
+        if (length > 1)
+            return std::wstring(response, length - 1);
+
+        std::cout << "Please enter the requested information" << std::endl;
     }
 }
 
@@ -82,40 +92,43 @@ int StandardConsole::ask_number_question(const std::wstring &question,
         const Validator<int> *validator)
 {
     for (;;) {
-        std::wcout << question;
-        if (default_answer)
-            std::wcout << L" [" << *default_answer << L"] ";
-        else
-            std::wcout << L" ";
+        m_editline_prompt = question + L": ";
 
-        std::wstring answer;
-        std::getline(std::wcin, answer);
-        if (answer.empty()) {
-            if (default_answer)
-                return *default_answer;
+        std::wstring default_answer_str;
+        if (default_answer) {
+            default_answer_str = number_cast(*default_answer);
+            el_wpush(m_editline, default_answer_str.c_str());
+        }
+
+        int length;
+        const wchar_t *response = el_wgets(m_editline, &length);
+        if (length <= 1) {
+            std::cout << "Please enter the requested information" << std::endl;
+            continue;
+        }
+
+        int number;
+        try {
+            number = boost::lexical_cast<int>(std::wstring(response, length - 1));
+        }
+        catch (boost::bad_lexical_cast) {
+            std::cout << "Please enter a valid number" << std::endl;
+            continue;
+        }
+
+        if (validator) {
+            boost::optional<std::wstring> error_message;
+            if (validator->validate(number, error_message))
+                return number;
+            if (error_message)
+                std::wcout << *error_message << std::endl;
+            else
+                std::cout << "Unknown validation error" << std::endl;
+            continue;
         }
         else {
-            int res;
-            try {
-                res = boost::lexical_cast<int>(answer);
-            }
-            catch (boost::bad_lexical_cast &) {
-                std::wcout << L"Please answer the question with a valid number" << std::endl;
-                continue;
-            }
-            if (validator) {
-                boost::optional<std::wstring> error_message;
-                if (validator->validate(res, error_message))
-                    return res;
-                std::wcout << (error_message ? *error_message : L"Unknown validation error") << std::endl;
-                continue;
-            }
-            else {
-                return res;
-            }
+            return number;
         }
-
-        std::wcout << L"Please answer the question" << std::endl;
     }
 }
 

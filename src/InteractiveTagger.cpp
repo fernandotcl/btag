@@ -1,7 +1,7 @@
 /*
  * This file is part of btag.
  *
- * © 2010-2012 Fernando Tarlá Cardoso Lemos
+ * © 2010-2013 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
@@ -115,7 +115,7 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
 
     // Save the unsaved files
     if (!m_unsaved_files.empty()
-            && (m_dry_run || m_terminal->ask_yes_no_question(L"=== OK to save the changes to the files?"))) {
+            && (m_dry_run || m_terminal->ask_yes_no_question(L"=== OK to save the changes to the files"))) {
         if (m_dry_run)
             m_terminal->display_info_message("=== Not saving changes (dry run mode)");
         BOOST_FOREACH(TagLib::FileRef &f, m_unsaved_files) {
@@ -129,7 +129,7 @@ void InteractiveTagger::tag(int num_paths, const char **paths)
 
     // Perform the pending renames
     if (!m_pending_renames.empty()
-            && (m_dry_run || m_terminal->ask_yes_no_question(L"=== OK to rename the files?"))) {
+            && (m_dry_run || m_terminal->ask_yes_no_question(L"=== OK to rename the files"))) {
         if (m_dry_run)
             m_terminal->display_info_message("=== Not renaming files (dry run mode)");
         std::list<std::pair<fs::path, fs::path> >::const_iterator it;
@@ -241,9 +241,9 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
 #endif
     if (!set_artist && !f.tag()->artist().isNull())
         artist_confirmation.set_local_default(m_input_filter->filter(f.tag()->artist().toWString()));
-    artist_confirmation.ask(L"Artist:");
+    artist_confirmation.ask(L"Artist");
     while (!artist_confirmation.complies())
-        artist_confirmation.ask(L"Artist (confirmation):");
+        artist_confirmation.ask(L"Artist (confirmation)");
     f.tag()->setArtist(artist_confirmation.answer());
 
     // Ask for the album
@@ -260,9 +260,9 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
 #endif
     if (!set_album && !f.tag()->album().isNull())
         album_confirmation.set_local_default(m_input_filter->filter(f.tag()->album().toWString()));
-    album_confirmation.ask(L"Album:");
+    album_confirmation.ask(L"Album");
     while (!album_confirmation.complies())
-        album_confirmation.ask(L"Album (confirmation):");
+        album_confirmation.ask(L"Album (confirmation)");
     f.tag()->setAlbum(album_confirmation.answer());
 
     // Ask for the year
@@ -285,7 +285,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
         default_year = f.tag()->year();
 #endif
     YearValidator year_validator;
-    int new_year = m_terminal->ask_number_question(L"Year:", default_year, &year_validator);
+    int new_year = m_terminal->ask_number_question(L"Year", default_year, &year_validator);
     f.tag()->setYear(new_year);
     if (year) *year = new_year;
 
@@ -308,9 +308,9 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
 #endif
     if (!set_title && !f.tag()->title().isNull())
         title_confirmation.set_local_default(m_input_filter->filter(f.tag()->title().toWString()));
-    title_confirmation.ask(L"Title:");
+    title_confirmation.ask(L"Title");
     while (!title_confirmation.complies())
-        title_confirmation.ask(L"Title (confirmation):");
+        title_confirmation.ask(L"Title (confirmation)");
     f.tag()->setTitle(title_confirmation.answer());
 
     // Reset the comment and genre fields
@@ -405,7 +405,7 @@ void InteractiveTagger::tag_directory(const fs::path &path)
     // We'll ask confirmation to descend into the subdirectories only if there are files
     BOOST_FOREACH(const fs::path &p, dir_list) {
         if (file_list.empty() || m_terminal->ask_yes_no_question(L"Descend into subdirectory \""
-                    + boost::lexical_cast<std::wstring>(p.filename()) + L"\"?", false))
+                    + boost::lexical_cast<std::wstring>(p.filename()) + L'"', false))
             tag_directory(p);
     }
 

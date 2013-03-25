@@ -8,6 +8,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 find_package(Boost 1.49.0 COMPONENTS filesystem locale system REQUIRED)
 
 find_package(PkgConfig)
+pkg_check_modules(LIBEDIT REQUIRED libedit)
 pkg_check_modules(TAGLIB REQUIRED taglib)
 
 option(CUESHEET_SUPPORT "Support for reading metadata from cue sheets" ON)
@@ -63,12 +64,14 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/src
     ${Boost_INCLUDE_DIRS}
     ${LIBCUE_INCLUDE_DIRS}
+    ${LIBEDIT_INCLUDE_DIRS}
     ${TAGLIB_INCLUDE_DIRS})
 
 add_executable(btag ${BTAG_SOURCES} ${BTAG_HEADERS})
 target_link_libraries(btag
     ${Boost_LIBRARIES}
     ${LIBCUE_LIBRARIES}
+    ${LIBEDIT_LIBRARIES}
     ${TAGLIB_LIBRARIES}
     ${EXTRA_LIBRARIES})
 
