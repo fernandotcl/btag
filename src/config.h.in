@@ -2,5 +2,6 @@
 #define CONFIG_H
 
 #cmakedefine CUESHEET_SUPPORT
+#define PROGRAM_NAME "@PROGRAM_NAME@"
 
 #endif

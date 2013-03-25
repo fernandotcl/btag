@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <iostream>
 
+#include "config.h"
 #include "number_cast.h"
 #include "StandardConsole.h"
 
@@ -25,7 +26,7 @@ wchar_t *StandardConsole::editline_prompt_callback(EditLine *editline)
 
 StandardConsole::StandardConsole()
 {
-    m_editline = el_init("btag", stdin, stdout, stderr);
+    m_editline = el_init(PROGRAM_NAME, stdin, stdout, stderr);
     assert(m_editline);
 
     el_wset(m_editline, EL_EDITOR, L"emacs");

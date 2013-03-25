@@ -34,8 +34,8 @@ static void print_usage(std::ostream &out)
 {
     out << "\
 Usage: \n\
-    btag [options] path1 [path2] [path3] ...\n\
-    btag --help\
+    " PROGRAM_NAME " [options] path1 [path2] [path3] ...\n\
+    " PROGRAM_NAME " --help\
 " << std::endl;
 }
 

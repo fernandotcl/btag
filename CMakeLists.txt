@@ -20,6 +20,8 @@ if(CUESHEET_SUPPORT)
     endif(ICONV_LIBRARIES)
 endif(CUESHEET_SUPPORT)
 
+set(PROGRAM_NAME ${PROJECT_NAME})
+
 set(BTAG_SOURCES
     src/BasicStringFilter.cpp
     src/ConfirmationHandler.cpp
