@@ -34,6 +34,35 @@ $ alias btag='btag -f title -t en -d "%album (%year)" -r "%track. %title"'
 
 Note that you can override the switches you specified in the alias.
 
+## Installing
+
+The easiest way to install btag is through [Homebrew][]. There is a formula for btag in [my Homebrew tap][tap].
+
+[homebrew]: http://mxcl.github.com/homebrew/
+[tap]: https://github.com/fernandotcl/homebrew-fernandotcl
+
+If you're compiling from source, you will need:
+
+* [Boost][] >= 1.49.0 (filesystem, locale and system)
+* [libcue][]
+* [TagLib][]
+* [pkg-config][]
+* [CMake][]
+
+[boost]: http://www.boost.org/
+[libcue]: http://sourceforge.net/projects/libcue/
+[taglib]: http://taglib.github.com/
+[pkg-config]: http://www.freedesktop.org/wiki/Software/pkg-config
+[cmake]: http://www.cmake.org/
+
+To compile and install:
+
+```sh
+cd /path/to/source
+cmake .
+make install
+```
+
 ## Credits
 
 btag was created by [Fernando Tarlá Cardoso Lemos](mailto:fernandotcl@gmail.com).
