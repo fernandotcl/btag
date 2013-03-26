@@ -1,10 +1,10 @@
 ## Introduction
 
-btag is a command line based multimedia tagger. It retains information about the filesystem structure so that you can tag a bunch of albums with ease. In some ways, btag can be compared to graphical taggers like [EasyTAG][] as both allow you to tag a lot of audio files in batches.
+btag is a command line based audio file tagger. It retains information about the filesystem structure so that you can tag a bunch of albums with ease. In some ways, btag can be compared to graphical taggers like [EasyTAG][] as both allow you to tag a lot of audio files in batches.
 
 [easytag]: http://easytag.sourceforge.net/
 
-The following features are implemented:
+A brief list of features:
 
 * Tagging of a vast number of formats supported by [TagLib][]
 * Tag normalization and filtering
