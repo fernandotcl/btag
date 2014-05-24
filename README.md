@@ -4,7 +4,7 @@ btag is a command line based audio file tagger. It retains information about the
 
 [easytag]: http://easytag.sourceforge.net/
 
-![btag screenshot](https://raw.github.com/fernandotcl/btag/master/screenshot.png)
+![btag screenshot](screenshot.png)
 
 A brief list of features:
 
