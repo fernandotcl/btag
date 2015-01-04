@@ -48,8 +48,13 @@ bool StandardConsole::ask_yes_no_question(const std::wstring &question,
         yn = L"y/n";
     }
 
+#ifdef __APPLE__
+    printf("%S [%S]? ", question.c_str(), yn.c_str());
+    fflush(stdout);
+#else
     std::wcout << question << " [" << yn << "]? ";
     std::wcout.flush();
+#endif
 
     for (;;) {
         wchar_t c = 0;
@@ -122,7 +127,11 @@ int StandardConsole::ask_number_question(const std::wstring &question,
             if (validator->validate(number, error_message))
                 return number;
             if (error_message)
+#ifdef __APPLE__
+                fprintf(stderr, "%S\n", error_message->c_str());
+#else
                 std::wcout << *error_message << std::endl;
+#endif
             else
                 std::cout << "Unknown validation error" << std::endl;
             continue;
@@ -140,7 +149,11 @@ void StandardConsole::display_info_message(const std::string &message)
 
 void StandardConsole::display_info_message(const std::wstring &message)
 {
+#ifdef __APPLE__
+    printf("%S\n", message.c_str());
+#else
     std::wcout << message << std::endl;
+#endif
 }
 
 void StandardConsole::display_warning_message(const std::string &message)
@@ -150,5 +163,9 @@ void StandardConsole::display_warning_message(const std::string &message)
 
 void StandardConsole::display_warning_message(const std::wstring &message)
 {
+#ifdef __APPLE__
+    fprintf(stderr, "WARNING: %S\n", message.c_str());
+#else
     std::wcerr << L"WARNING: " << message << std::endl;
+#endif
 }
