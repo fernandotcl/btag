@@ -1,7 +1,7 @@
 /*
  * This file is part of btag.
  *
- * © 2010,2013 Fernando Tarlá Cardoso Lemos
+ * © 2010, 2013, 2015 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
