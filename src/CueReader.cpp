@@ -1,7 +1,7 @@
 /*
  * This file is part of btag.
  *
- * © 2012 Fernando Tarlá Cardoso Lemos
+ * © 2012, 2015 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
@@ -47,6 +47,11 @@ CueReader::~CueReader()
         cd_delete(m_cd);
     if (m_iconv != (iconv_t)-1)
         iconv_close(m_iconv);
+}
+
+int CueReader::number_of_tracks()
+{
+    return cd_get_ntrack(m_cd);
 }
 
 boost::optional<std::wstring> CueReader::cdtext_string(Cdtext *cdt, Pti pti)

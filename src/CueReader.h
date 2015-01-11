@@ -1,7 +1,7 @@
 /*
  * This file is part of btag.
  *
- * © 2012 Fernando Tarlá Cardoso Lemos
+ * © 2012, 2015 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
@@ -23,6 +23,8 @@ class CueReader
     public:
         CueReader(const std::string &filename, const std::string &encoding);
         ~CueReader();
+
+        int number_of_tracks();
 
         boost::optional<std::wstring> artist_for_track(int track);
         boost::optional<std::wstring> title_for_track(int track);

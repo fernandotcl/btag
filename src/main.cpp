@@ -14,6 +14,7 @@
 #include <cstring>
 #include <getopt.h>
 #include <iostream>
+#include <list>
 #include <locale>
 #include <string>
 
@@ -113,8 +114,8 @@ int main(int argc, char **argv)
     StandardConsole console;
     itag.set_terminal(&console);
 
-    // Cue sheet filename and encoding
-    boost::optional<std::string> cue_filename;
+    // Cue sheet filenames and encoding
+    std::list<std::string> cue_filenames;
     std::string cue_encoding("ISO-8859-1");
 
     // Parse the command line options
@@ -127,7 +128,7 @@ int main(int argc, char **argv)
         switch (opt) {
 #ifdef CUESHEET_SUPPORT
             case 'C':
-                cue_filename = optarg;
+                cue_filenames.push_back(optarg);
                 break;
 #endif
             case 'D':
@@ -200,8 +201,8 @@ int main(int argc, char **argv)
 
 #ifdef CUESHEET_SUPPORT
     // Load the cue sheet if needed
-    if (cue_filename)
-        itag.load_cue_sheet(*cue_filename, cue_encoding);
+    if (!cue_filenames.empty())
+        itag.load_cue_sheets(cue_filenames, cue_encoding);
 #endif
 
     // Add the title localization handler

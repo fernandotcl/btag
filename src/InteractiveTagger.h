@@ -1,7 +1,7 @@
 /*
  * This file is part of btag.
  *
- * © 2010 - 2012 Fernando Tarlá Cardoso Lemos
+ * © 2010 - 2012, 2015 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
@@ -26,7 +26,7 @@
 #include "RenamingFilter.h"
 
 #ifdef CUESHEET_SUPPORT
-# include "CueReader.h"
+# include "CueReaderMultiplexer.h"
 #endif
 
 class InteractiveTagger
@@ -46,7 +46,7 @@ class InteractiveTagger
         void set_ask_track(bool ask_track = true) { m_ask_track = ask_track; }
 
 #ifdef CUESHEET_SUPPORT
-        void load_cue_sheet(const std::string &filename, const std::string &encoding);
+        void load_cue_sheets(const std::list<std::string> &filenames, const std::string &encoding);
 #endif
 
         void tag(int num_paths, const char **paths);
@@ -72,7 +72,7 @@ class InteractiveTagger
         std::list<std::wstring> m_supported_extensions;
 
 #ifdef CUESHEET_SUPPORT
-        boost::scoped_ptr<CueReader> m_cue;
+        boost::scoped_ptr<CueReaderMultiplexer> m_cue;
 #endif
 };
 

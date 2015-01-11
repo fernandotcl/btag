@@ -54,8 +54,14 @@ set(BTAG_HEADERS
     src/wide_string_cast.h)
 
 if(CUESHEET_SUPPORT)
-    set(BTAG_SOURCES ${BTAG_SOURCES} src/CueReader.cpp)
-    set(BTAG_HEADERS ${BTAG_HEADERS} src/CueReader.h)
+    set(BTAG_SOURCES
+        ${BTAG_SOURCES}
+        src/CueReader.cpp
+        src/CueReaderMultiplexer.cpp)
+    set(BTAG_HEADERS
+        ${BTAG_HEADERS}
+        src/CueReader.h
+        src/CueReaderMultiplexer.h)
 endif(CUESHEET_SUPPORT)
 
 configure_file(

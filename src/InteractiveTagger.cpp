@@ -1,7 +1,7 @@
 /*
  * This file is part of btag.
  *
- * © 2010 - 2013 Fernando Tarlá Cardoso Lemos
+ * © 2010 - 2013, 2015 Fernando Tarlá Cardoso Lemos
  *
  * Refer to the LICENSE file for licensing information.
  *
@@ -45,14 +45,14 @@ void InteractiveTagger::set_dir_rename_format(const std::string &format)
 }
 
 #ifdef CUESHEET_SUPPORT
-void InteractiveTagger::load_cue_sheet(const std::string &filename, const std::string &encoding)
+void InteractiveTagger::load_cue_sheets(const std::list<std::string> &filenames, const std::string &encoding)
 {
     try {
-        m_cue.reset(new CueReader(filename, encoding));
+        m_cue.reset(new CueReaderMultiplexer(filenames, encoding));
     }
     catch (std::exception &e) {
         m_terminal->display_warning_message(e.what());
-        m_terminal->display_warning_message("Ignoring CUE file");
+        m_terminal->display_warning_message("Ignoring CUE files");
     }
 }
 #endif
