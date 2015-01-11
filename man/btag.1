@@ -8,6 +8,8 @@ btag \- A command line based multimedia tagger
 btag is a TagLib-based command line multimedia tag editor that attempts to automate the process of tagging a lot of files at once. It uses the tags found in the supplied files as well as interactive user input to determine new values for the tags. It can also optionally rename files and directories based on those new values.
 
 You can supply paths to files or directories to btag. Directories are recursively traversed and all files found are tagged. Directories are also handled differently in the sense that btag will attempt to keep information about the previously tagged files to provide sane defaults for all other files in the same parent directory. Only files with file extensions supported by TagLib are considered.
+
+Multiple cue sheets can be specified. btag will then search for track information in all cue sheets in the order they have been specified. Track numbers are automatically adjusted assuming that all cue sheets have track numbers starting from 1. This is particularly useful for tagging albums that span multiple CDs. Note that a single encoding is assumed for all cue sheets specified.
 .SH OPTIONS
 .TP 33
 .B \-\-always-ask-track
