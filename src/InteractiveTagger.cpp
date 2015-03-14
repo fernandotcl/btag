@@ -222,7 +222,7 @@ void InteractiveTagger::tag_file(const fs::path &path, ConfirmationHandler &arti
         }
     }
     if (ask_track) {
-        track = m_terminal->ask_number_question(L"Track:",
+        track = m_terminal->ask_number_question(L"Track",
                 track > 0 ? track : boost::optional<int>(), &track_validator);
     }
     f.tag()->setTrack(track);
