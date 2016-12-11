@@ -15,6 +15,8 @@
 class RenamingFilter
 {
     public:
+        virtual ~RenamingFilter() {}
+
         std::wstring filter(const std::wstring &path_component) const;
 
     private:

@@ -31,6 +31,8 @@ class TitleLocalizationHandler
             word_hint(const std::vector<bool> &u) : style(WORD_STYLE_CUSTOM), uppercase(u) {}
         };
 
+        virtual ~TitleLocalizationHandler() {}
+
         virtual word_hint word_hint_for_word(const std::wstring &word, size_t index, size_t count, wchar_t after_punctuation) const = 0;
         virtual bool is_acronym(const std::wstring &word) const;
         virtual wchar_t *punctuation_list() const;
