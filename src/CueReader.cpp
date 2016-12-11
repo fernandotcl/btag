@@ -10,6 +10,7 @@
 #include <boost/lexical_cast.hpp>
 #include <cstdio>
 #include <stdexcept>
+#include <vector>
 
 #include "CueReader.h"
 #include "validators.h"
@@ -59,20 +60,26 @@ boost::optional<std::wstring> CueReader::cdtext_string(Cdtext *cdt, Pti pti)
     // Reset the iconv descriptor
     iconv(m_iconv, NULL, NULL, NULL, NULL);
 
-    // Get the input buffer
-    char *inbuf = cdtext_get(pti, cdt);
-    if (!inbuf)
+    // Read the string
+    const char *cdtext_str = cdtext_get(pti, cdt);
+    if (!cdtext_str)
         return boost::optional<std::wstring>();
+    const size_t cdtext_len = strlen(cdtext_str);
+
+    // Copy into an input buffer
+    std::vector<char> inbuf(cdtext_len + 1);
+    memcpy(&inbuf[0], cdtext_str, cdtext_len + 1);
 
     // Create the output buffer
-    size_t inbytesleft = strlen(inbuf);
+    size_t inbytesleft = inbuf.size() * sizeof(char);
     size_t outbytesleft = inbytesleft * sizeof(wchar_t);
     size_t buffer_size = outbytesleft;
     wchar_t outbuf_data[buffer_size / sizeof(wchar_t)];
     char *outbuf = reinterpret_cast<char *>(outbuf_data);
 
     // Do the conversion
-    size_t rc = iconv(m_iconv, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
+    char *inbuf_ptr = &inbuf[0];
+    size_t rc = iconv(m_iconv, &inbuf_ptr, &inbytesleft, &outbuf, &outbytesleft);
     if (rc == (size_t)-1)
         return boost::optional<std::wstring>();
 
