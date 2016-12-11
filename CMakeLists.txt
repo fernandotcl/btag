@@ -1,23 +1,23 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(btag)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
 if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
+list(APPEND CMAKE_PREFIX_PATH /usr/local)
 find_package(Boost 1.49.0 COMPONENTS filesystem locale system REQUIRED)
 
-find_package(PkgConfig)
-pkg_check_modules(LIBEDIT REQUIRED libedit)
-pkg_check_modules(TAGLIB REQUIRED taglib)
+find_package(TagLib REQUIRED)
+find_package(LibEdit REQUIRED)
 
 option(CUESHEET_SUPPORT "Support for reading metadata from cue sheets" ON)
 if(CUESHEET_SUPPORT)
-    pkg_check_modules(LIBCUE REQUIRED libcue)
-    find_library(ICONV_LIBRARIES NAMES iconv)
-    if(ICONV_LIBRARIES)
-        set(EXTRA_LIBRARIES ${EXTRA_LIBRARIES} ${ICONV_LIBRARIES})
-    endif(ICONV_LIBRARIES)
+    find_package(LibCue REQUIRED)
+    find_package(Iconv REQUIRED)
+    set(EXTRA_LIBRARIES ${EXTRA_LIBRARIES} ${LIBCUE_LIBRARIES} ${ICONV_LIBRARIES})
 endif(CUESHEET_SUPPORT)
 
 set(PROGRAM_NAME ${PROJECT_NAME})
@@ -78,7 +78,6 @@ include_directories(
 add_executable(btag ${BTAG_SOURCES} ${BTAG_HEADERS})
 target_link_libraries(btag
     ${Boost_LIBRARIES}
-    ${LIBCUE_LIBRARIES}
     ${LIBEDIT_LIBRARIES}
     ${TAGLIB_LIBRARIES}
     ${EXTRA_LIBRARIES})
