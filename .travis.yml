@@ -1,0 +1,36 @@
+language: c++
+
+matrix:
+  include:
+  - os: linux
+    dist: xenial
+    addons:
+      apt:
+        packages:
+        - cmake
+        - libboost-dev
+        - libboost-filesystem-dev
+        - libboost-locale-dev
+        - libtag1-dev
+        - libcue-dev
+        - libedit-dev
+        - pkg-config
+    script:
+    - cmake . -DENABLE_TESTS=1
+    - make VERBOSE=1
+    - make VERBOSE=1 check
+
+  - os: osx
+    addons:
+      homebrew:
+        packages:
+        - cmake
+        - pkg-config
+        - boost
+        - libcue
+        - libedit
+        - taglib
+    script:
+    - cmake . -DENABLE_TESTS=1
+    - make VERBOSE=1
+    - make VERBOSE=1 check
