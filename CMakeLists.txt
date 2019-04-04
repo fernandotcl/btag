@@ -17,7 +17,7 @@ option(CUESHEET_SUPPORT "Support for reading metadata from cue sheets" ON)
 if(CUESHEET_SUPPORT)
     find_package(LibCue REQUIRED)
     find_package(Iconv REQUIRED)
-    set(EXTRA_LIBRARIES ${EXTRA_LIBRARIES} ${LIBCUE_LIBRARIES} ${ICONV_LIBRARIES})
+    set(EXTRA_LIBRARIES ${EXTRA_LIBRARIES} ${LIBCUE_LIBRARIES} ${Iconv_LIBRARIES})
 endif(CUESHEET_SUPPORT)
 
 set(PROGRAM_NAME ${PROJECT_NAME})
