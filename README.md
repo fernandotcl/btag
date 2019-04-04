@@ -1,4 +1,6 @@
-## Introduction
+# btag
+
+[![Build Status](https://travis-ci.com/fernandotcl/btag.svg?branch=master)](https://travis-ci.com/fernandotcl/btag)
 
 btag is a command line based audio file tagger. It retains information about the filesystem structure so that you can tag a bunch of albums with ease. In some ways, btag can be compared to graphical taggers like [EasyTAG][] as both allow you to tag a lot of audio files in batches.
 
@@ -47,12 +49,14 @@ If you're compiling from source, you will need:
 
 * [Boost][] >= 1.49.0 (filesystem, locale and system)
 * [libcue][]
+* [libedit][]
 * [TagLib][]
 * [pkg-config][]
 * [CMake][]
 
 [boost]: http://www.boost.org/
 [libcue]: http://sourceforge.net/projects/libcue/
+[libedit]: https://www.thrysoee.dk/editline/
 [taglib]: http://taglib.github.com/
 [pkg-config]: http://www.freedesktop.org/wiki/Software/pkg-config
 [cmake]: http://www.cmake.org/
@@ -67,7 +71,9 @@ make install
 
 ## Credits
 
-btag was created by [Fernando Tarlá Cardoso Lemos](mailto:fernandotcl@gmail.com).
+btag was created by [Fernando Tarlá Cardoso Lemos][fernando].
+
+[fernando]: mailto:fernandotcl@gmail.com
 
 ## License
 
